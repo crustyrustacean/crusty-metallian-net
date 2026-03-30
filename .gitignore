@@ -1,0 +1,4 @@
+# crusty-metallian-net gitignore configuration
+
+# build assets
+dist/

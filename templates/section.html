@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}{{ section.title }}{% endblock %}
+
+{% block content %}
+<section>
+    <h2>{{ section.title }}</h2>
+    {% if section.description %}
+    <p class="intro">{{ section.description }}</p>
+    {% endif %}
+    
+    {% if section.pages %}
+    {% for page in section.pages %}
+    <article>
+        <header>
+            <h3><a href="{{ page.path }}">{{ page.title }}</a></h3>
+            {% if page.date %}
+            <p>{{ page.date | date(format="%B %d, %Y") }}</p>
+            {% endif %}
+        </header>
+        {% if page.description %}
+        <p>{{ page.description }}</p>
+        {% endif %}
+        {% if page.tags %}
+        <footer>
+            <ul class="tags">
+                {% for tag in page.tags %}
+                <li>{{ tag }}</li>
+                {% endfor %}
+            </ul>
+        </footer>
+        {% endif %}
+    </article>
+    {% endfor %}
+    {% endif %}
+    
+    <div class="prose">
+        {{ section.content | safe }}
+    </div>
+</section>
+{% endblock %}

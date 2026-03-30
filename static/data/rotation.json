@@ -1,0 +1,16 @@
+[
+    {
+        "artist": "Metal Church",
+        "album": "The Final Sermon - Live in Japan 2019",
+        "cover": "/static/images/covers/the-final-sermon.jpg",
+        "year": 2019,
+        "note": "I missed out listening to Metal Church in their hey-day. Recently discovered their power."
+    },
+    {
+        "artist": "Alestorm",
+        "album": "Curse of the Crystal Coconut (Deluxe Version)",
+        "cover": "/static/images/covers/curse-of-the-crystal-coconut.jpg",
+        "year": 2020,
+        "note": "Introduced to Alestorm in 2024, such a fantastic band."
+    }
+]
