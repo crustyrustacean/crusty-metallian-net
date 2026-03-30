@@ -12,5 +12,12 @@
         "cover": "/static/images/covers/curse-of-the-crystal-coconut.jpg",
         "year": 2020,
         "note": "Introduced to Alestorm in 2024, such a fantastic band."
+    },
+    {
+        "artist": "Alice Cooper",
+        "album": "Special Forces",
+        "cover": "/static/images/covers/special-forces.jpg",
+        "year": "1981",
+        "note": "Discovered this album 40 years late, in early 2021. Historically not the biggest Alice fan but this album resonates."
     }
 ]
