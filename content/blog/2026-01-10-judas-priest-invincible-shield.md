@@ -6,7 +6,9 @@ tags = ["artist", "Judas Priest", "review"]
 draft = false
 +++
 
-*Invincible Shield* is the 19th studio album from my beloved band, Judas Priest. The year 2024 marked the band's 50th anniversary.  I've been listening to them since about 1984 and to me, *Invincible Shield* is their most incredible piece of work yet.
+![Invincible Shield](/blog/judas-priest-invincible-shield-cover.png)
+
+*Invincible Shield* is the 19th studio album from my beloved band, Judas Priest. The year 2024 marked the band's 50th anniversary.  I've been listening to them since about 1984 and to me, *Invincible Shield* is their most incredible piece of work yet. It was released on March 8, 2024.
 
 When *Firepower* came out in the spring of 2018, I thought that was as good as it got. That album is tremendous, and I still think it is, but *Invincible Shield* took me to an even higher plane. *Every* song has something to enjoy. I feel it's the strongest thing they've *ever* produced.
 

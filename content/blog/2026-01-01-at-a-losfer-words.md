@@ -10,6 +10,8 @@ It's a new day, and a new year. January 2026 is all about building a writing hab
 
 I though I'd start with a small piece of silly trivia.
 
+![Powerslave](/blog/iron-maiden-powerslave-cover.jpg)
+
 The Iron Maiden album *Powerslave* was released on September 3, 1984, over *42 years* ago. It was Maiden's fifth studio album, and to this day is one of their absolutely most iconic pieces of work. I try not to think about the fact I was 13 when it came out. I think I received it on vinyl for a birthday...or Christmas...can't remember.
 
 The third track is titled *Losfer Words*. It has no lyrics and is just instrumental.

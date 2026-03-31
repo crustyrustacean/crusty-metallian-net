@@ -14,6 +14,8 @@ It felt...*blah*.
 
 I'm not sure when exactly I discovered it, but somewhere in the fall the aptly named *Heavy Metal Music* by Jason Newsted came into view.
 
+![Heavy Metal Music](/blog/newsted-heavy-metal-music-cover.jpg)
+
 It instantly resonated.
 
 It wasn't *that* different or earth shattering, to be honest, but for some reason it was just different enough that it felt brand new. I listened to it quite a lot. *Soldierhead*, *Long Time Dead* and *King of the Underdogs* were particularly standout tracks.
