@@ -19,5 +19,12 @@
         "cover": "/static/images/covers/special-forces.jpg",
         "year": "1981",
         "note": "Discovered this album 40 years late, in early 2021. Historically not the biggest Alice fan but this album resonates."
+    },
+    {
+        "artist": "Sabaton",
+        "album": "Attero Dominatus",
+        "cover": "/static/images/covers/attero-dominatus.jpg",
+        "year": "2006",
+        "note": "A co-worker turned me on to Sabaton in early 2022. This album is amazing. I remember the Falklands War!"
     }
 ]
