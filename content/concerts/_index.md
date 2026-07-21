@@ -63,8 +63,8 @@ title = "Concerts"
 
 ## 2026
 - [The Offspring and Bad Religion](https://www.setlist.fm/setlist/the-offspring/2026/rogers-arena-vancouver-bc-canada-7b414e80.html), Saturday, January 24, Rogers Arena, Vancouver, BC
+- [Alestorm](https://www.setlist.fm/setlist/alestorm/2026/commodore-ballroom-vancouver-bc-canada-5b4b37b8.html), Sunday, May 31, Commodore Ballroom, Vancouver, BC
 
 ## Upcoming in 2026
-- Alestorm, May 31, 2026 at the Commodore Ballroom
-- Sabaton, Wednesday, October 7 at the PNE Forum
 - AC/DC, Thursday, August 13 at BC Place
+- Sabaton, Wednesday, October 7 at the PNE Forum
