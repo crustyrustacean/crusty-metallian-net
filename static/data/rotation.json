@@ -1,30 +1,37 @@
 [
-    {
-        "artist": "Metal Church",
-        "album": "The Final Sermon - Live in Japan 2019",
-        "cover": "/static/images/covers/the-final-sermon.jpg",
-        "year": 2019,
-        "note": "I missed out listening to Metal Church in their hey-day. Recently discovered their power."
-    },
-    {
-        "artist": "Alestorm",
-        "album": "Curse of the Crystal Coconut (Deluxe Version)",
-        "cover": "/static/images/covers/curse-of-the-crystal-coconut.jpg",
-        "year": 2020,
-        "note": "Introduced to Alestorm in 2024, such a fantastic band."
-    },
-    {
-        "artist": "Alice Cooper",
-        "album": "Special Forces",
-        "cover": "/static/images/covers/special-forces.jpg",
-        "year": "1981",
-        "note": "Discovered this album 40 years late, in early 2021. Historically not the biggest Alice fan but this album resonates."
-    },
-    {
-        "artist": "Sabaton",
-        "album": "Attero Dominatus",
-        "cover": "/static/images/covers/attero-dominatus.jpg",
-        "year": "2006",
-        "note": "A co-worker turned me on to Sabaton in early 2022. This album is amazing. I remember the Falklands War!"
-    }
+  {
+    "artist": "Metal Church",
+    "album": "The Final Sermon - Live in Japan 2019",
+    "cover": "/static/images/covers/the-final-sermon.jpg",
+    "year": 2019,
+    "note": "I missed out listening to Metal Church in their hey-day. Recently discovered their power."
+  },
+  {
+    "artist": "Alestorm",
+    "album": "Curse of the Crystal Coconut (Deluxe Version)",
+    "cover": "/static/images/covers/curse-of-the-crystal-coconut.jpg",
+    "year": 2020,
+    "note": "Introduced to Alestorm in 2024, such a fantastic band."
+  },
+  {
+    "artist": "Alice Cooper",
+    "album": "Special Forces",
+    "cover": "/static/images/covers/special-forces.jpg",
+    "year": "1981",
+    "note": "Discovered this album 40 years late, in early 2021. Historically not the biggest Alice fan but this album resonates."
+  },
+  {
+    "artist": "Sabaton",
+    "album": "Attero Dominatus",
+    "cover": "/static/images/covers/attero-dominatus.jpg",
+    "year": "2006",
+    "note": "A co-worker turned me on to Sabaton in early 2022. This album is amazing. I remember the Falklands War!"
+  },
+  {
+    "artist": "Alestorm",
+    "album": "The Thunderfist Chronicles",
+    "cover": "/static/images/covers/thunderfist-chronicles.jpg",
+    "year": "2025",
+    "note": "The latest from this terrific band. Three discs, full live show is part of the package."
+  }
 ]
