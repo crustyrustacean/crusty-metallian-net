@@ -704,3 +704,55 @@
     white-space: nowrap;
   }
 }
+
+
+/* ===== Galleries Index (fetched from metallian-photos API) ===== */
+.gallery-index {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+  gap: var(--space-lg);
+}
+
+.gallery-card {
+  background: var(--bg-card);
+  border-radius: 4px;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px oklch(0% 0 0 / 0.4);
+  }
+
+  & a {
+    display: block;
+    color: var(--text-primary);
+    text-decoration: none;
+  }
+
+  & img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+}
+
+.gallery-card-info {
+  padding: var(--space-md);
+}
+
+.gallery-card-band {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  letter-spacing: 0.03em;
+  color: var(--text-primary);
+  margin-block-end: var(--space-xs);
+}
+
+.gallery-card-count {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
