@@ -2,6 +2,10 @@
 title = "Galleries"
 +++
 
+## Photo Galleries
+
+Here be links to galleries from select concerts past.
+
 <div class="gallery-index" id="gallery-index">
     <p>Loading galleries.</p>
 </div>
