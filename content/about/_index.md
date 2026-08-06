@@ -2,6 +2,8 @@
 title = "About"
 +++
 
+## About the Author
+
 > Give me fuel, give me fire, give me that which I desire! - Metallica, Fuel
 
 I don't feel like there's a lot to say about me, in the context of a music blog. I love music, I've grown up with it. I think I was 9 when a clock radio came into my life, I can't even recall if it was an FM radio, it might have been AM only...
