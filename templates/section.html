@@ -4,17 +4,27 @@
 
 {% block content %}
 <section>
-    {% if section.description %}
-    <p class="intro">{{ section.description }}</p>
+    {% if not section.content %}
+    <h2>{{ section.title }}</h2>
+    <nav class="taxonomy-nav">
+        <a href="/categories/">Categories</a>
+        <a href="/tags/">Tags</a>
+    </nav>
     {% endif %}
-    
+
+    {% if section.content %}
+    <div class="prose">
+        {{ section.content | safe }}
+    </div>
+    {% endif %}
+
     {% if section.pages %}
     {% for page in section.pages %}
     <article>
         <header>
             <h3><a href="{{ page.path }}">{{ page.title }}</a></h3>
             {% if page.date %}
-            <p>{{ page.date | date(format="%B %d, %Y") }}</p>
+            <p class="post-date">{{ page.date | date(format="%B %d, %Y") }}</p>
             {% endif %}
         </header>
         {% if page.description %}
@@ -24,7 +34,7 @@
         <footer>
             <ul class="tags">
                 {% for tag in page.tags %}
-                <li>{{ tag }}</li>
+                <li><a href="/tags/{{ tag | slugify }}/">{{ tag }}</a></li>
                 {% endfor %}
             </ul>
         </footer>
@@ -32,9 +42,21 @@
     </article>
     {% endfor %}
     {% endif %}
-    
-    <div class="prose">
-        {{ section.content | safe }}
-    </div>
+
+    {% if section.pagination %}
+    <nav class="pagination" aria-label="Pagination">
+        {% if section.pagination.prev %}
+        <a href="{{ section.pagination.prev }}" rel="prev">&larr; Previous</a>
+        {% else %}
+        <span class="pagination-disabled">&larr; Previous</span>
+        {% endif %}
+        <span class="page-info" aria-current="page">Page {{ section.pagination.current }} of {{ section.pagination.total }}</span>
+        {% if section.pagination.next %}
+        <a href="{{ section.pagination.next }}" rel="next">Next &rarr;</a>
+        {% else %}
+        <span class="pagination-disabled">Next &rarr;</span>
+        {% endif %}
+    </nav>
+    {% endif %}
 </section>
 {% endblock %}

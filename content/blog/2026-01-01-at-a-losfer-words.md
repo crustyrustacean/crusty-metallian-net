@@ -1,8 +1,8 @@
 +++
 title = "At a Losfer Words"
 date = 2026-01-01
-category = [ "diary" ]
-tags = [ "trivia" ]
+categories = ["diary"]
+tags = ["trivia"]
 draft = false
 +++
 
