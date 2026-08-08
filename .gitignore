@@ -1,5 +1,9 @@
 # crusty-metallian-net gitignore configuration
 
+# Rho coding agent configuration
+.rho
+logs
+
 # build assets
 dist/
 logs/
