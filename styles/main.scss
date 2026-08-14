@@ -185,6 +185,8 @@
     & h2 {
       margin-block-end: var(--space-lg);
       font-size: clamp(1.5rem, 4vw, 2rem);
+      border-block-end: 2px solid var(--accent);
+      padding-block-end: var(--space-sm);
     }
 
     /* Gallery needs wider layout */
@@ -247,6 +249,157 @@
     }
   }
 
+  /* Taxonomy Sub-nav (appears on blog listing and taxonomy pages) */
+  .taxonomy-nav {
+    display: flex;
+    gap: var(--space-md);
+    margin-block-end: var(--space-lg);
+    padding-block-end: var(--space-md);
+    border-block-end: var(--border-width) solid var(--border);
+
+    & a {
+      font-family: var(--font-heading);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-size: 0.85rem;
+      padding: var(--space-xs) var(--space-sm);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      transition: color 0.2s, border-color 0.2s, background 0.2s;
+
+      &:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        text-decoration: none;
+      }
+
+      &.active {
+        color: var(--text-primary);
+        border-color: var(--accent);
+        background: oklch(18% 0 0);
+      }
+    }
+  }
+
+  /* Taxonomy / Page List (used on categories/, tags/, and term pages) */
+  .taxonomy-list,
+  .page-list {
+    list-style: none;
+    padding: 0;
+
+    & li {
+      margin-block-end: var(--space-md);
+
+      & a {
+        color: var(--text-primary);
+        display: block;
+        padding: var(--space-md);
+        background: var(--bg-card);
+        border-inline-start: 3px solid var(--accent);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+        &:hover {
+          transform: translateX(4px);
+          box-shadow: -4px 4px 12px oklch(0% 0 0 / 0.3);
+          text-decoration: none;
+        }
+      }
+
+      & h3 {
+        font-size: 1.1rem;
+        margin-block-end: var(--space-xs);
+      }
+
+      & .meta {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+      }
+    }
+  }
+
+  /* Page Header (individual posts) */
+  .page-header {
+    margin-block-end: var(--space-lg);
+
+    & h1 {
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      margin-block-end: var(--space-sm);
+    }
+
+    & .post-date {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+
+      & a {
+        color: var(--accent);
+      }
+    }
+  }
+
+  /* ===== Pagination ===== */
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-lg);
+    margin-block-start: var(--space-xl);
+    padding-block-start: var(--space-md);
+    border-block-start: var(--border-width) solid var(--border);
+
+    a {
+      font-family: var(--font-heading);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-size: 0.85rem;
+      color: var(--accent);
+
+      &:hover {
+        color: color-mix(in oklch, var(--accent), white 20%);
+        text-decoration: none;
+      }
+    }
+
+    .page-info {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .pagination-disabled {
+      font-family: var(--font-heading);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-size: 0.85rem;
+      color: var(--border);
+      opacity: 0.5;
+    }
+  }
+
+  /* ===== Back Navigation ===== */
+  .back-nav {
+    margin-block-start: var(--space-xl);
+
+    a {
+      font-family: var(--font-heading);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-size: 0.85rem;
+      color: var(--accent);
+
+      &:hover {
+        color: color-mix(in oklch, var(--accent), white 20%);
+        text-decoration: none;
+      }
+    }
+  }
+
+  /* Article Footer (tags on individual posts) */
+  .article-footer {
+    margin-block-start: var(--space-xl);
+    padding-block-start: var(--space-md);
+    border-block-start: var(--border-width) solid var(--border);
+  }
+
   /* Tag List */
   .tags {
     display: flex;
@@ -261,6 +414,15 @@
       padding: var(--space-xs) var(--space-sm);
       background: var(--border);
       color: var(--text-muted);
+
+      & a {
+        color: var(--text-muted);
+
+        &:hover {
+          color: var(--accent);
+          text-decoration: none;
+        }
+      }
     }
   }
 
@@ -704,7 +866,6 @@
     white-space: nowrap;
   }
 }
-
 
 /* ===== Galleries Index (fetched from metallian-photos API) ===== */
 .gallery-index {

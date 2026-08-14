@@ -1,7 +1,7 @@
 +++
 title = "Site Lying Fallow"
 date = 2026-08-03
-category = ["diary"]
+categories = ["diary"]
 tags = ["meta"]
 draft = false
 +++

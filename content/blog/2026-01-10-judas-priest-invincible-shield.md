@@ -1,7 +1,7 @@
 +++
 title = "Invincible Shield"
 date = 2026-01-10
-category = ["diary"]
+categories = ["diary"]
 tags = ["artist", "Judas Priest", "review"]
 draft = false
 +++

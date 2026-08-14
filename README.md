@@ -1,3 +1,3 @@
 # The Crusty Metallian Music Blog
 
-This is my music blog. Statically generated with [yew-ssg](https://github.com/crustyrustacean/yew-ssg) and hosted on Cloudflare Pages.
+This is my music blog. Statically generated with [Taxus](https://get-taxus-org.pages.dev) and hosted on Cloudflare Pages.

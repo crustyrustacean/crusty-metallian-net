@@ -1,7 +1,7 @@
 +++
 title = "The Second Life of Jason Newsted"
 date = 2026-01-02
-category = ["diary"]
+categories = ["diary"]
 tags = ["artist", "Jason Newsted", "review"]
 draft = false
 +++

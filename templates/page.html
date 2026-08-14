@@ -4,8 +4,36 @@
 
 {% block content %}
 <section>
+    <header class="page-header">
+        <h1>{{ page.title }}</h1>
+        {% if page.date %}
+        <p class="post-date">
+            {{ page.date | date(format="%B %d, %Y") }}
+            {%- if page.categories %} in
+            {% for cat in page.categories -%}
+            <a href="/categories/{{ cat | slugify }}/">{{ cat }}</a>{% if not loop.last %}, {% endif %}
+            {%- endfor %}
+            {%- endif -%}
+        </p>
+        {% endif %}
+    </header>
+
     <div class="prose">
         {{ page.content | safe }}
     </div>
+
+    {% if page.tags %}
+    <footer class="article-footer">
+        <ul class="tags">
+            {% for tag in page.tags %}
+            <li><a href="/tags/{{ tag | slugify }}/">{{ tag }}</a></li>
+            {% endfor %}
+        </ul>
+    </footer>
+    {% endif %}
+
+    <nav class="back-nav">
+        <a href="/blog/" rel="prev">&larr; Back to Blog</a>
+    </nav>
 </section>
 {% endblock %}

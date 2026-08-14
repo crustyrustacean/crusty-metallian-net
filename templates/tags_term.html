@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Tag: {{ extra.taxonomy.name }}{% endblock %}
+
+{% block content %}
+<section>
+    <h1>{{ extra.taxonomy.name }}</h1>
+    <nav class="taxonomy-nav">
+        <a href="/categories/">Categories</a>
+        <a href="/tags/">Tags</a>
+    </nav>
+    <p class="meta">{{ extra.taxonomy.page_count }} post{{ extra.taxonomy.page_count | pluralize }}</p>
+    {% if extra.taxonomy.pages %}
+    <ul class="page-list">
+        {% for page in extra.taxonomy.pages %}
+        <li>
+            <article>
+                <h3><a href="{{ page.path }}">{{ page.title }}</a></h3>
+                {% if page.date %}
+                <p class="meta">{{ page.date | date(format="%B %d, %Y") }}</p>
+                {% endif %}
+            </article>
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</section>
+{% endblock %}
