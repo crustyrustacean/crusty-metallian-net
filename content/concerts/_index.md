@@ -66,7 +66,8 @@ title = "Concerts"
 ## 2026
 - [The Offspring and Bad Religion](https://www.setlist.fm/setlist/the-offspring/2026/rogers-arena-vancouver-bc-canada-7b414e80.html), Saturday, January 24, Rogers Arena, Vancouver, BC
 - [Alestorm](https://www.setlist.fm/setlist/alestorm/2026/commodore-ballroom-vancouver-bc-canada-5b4b37b8.html), Sunday, May 31, Commodore Ballroom, Vancouver, BC
+- [AC/DC and The Pretty Reckless](https://www.setlist.fm/setlist/acdc/2026/bc-place-stadium-vancouver-bc-canada-134f95c5.html), Thursday, August 13, BC Place, Vancouver, BC
 
 ## Upcoming in 2026
-- AC/DC, Thursday, August 13 at BC Place
 - Sabaton, Wednesday, October 7 at the PNE Forum
+- W.A.S.P, Friday, October 23 at the Great Canadian Casino
