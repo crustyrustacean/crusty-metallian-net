@@ -10,7 +10,10 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 Write-Host "Deploying to Cloudflare Pages..." -ForegroundColor Cyan
-npx wrangler pages deploy dist/ --project-name=crusty-metallian-net
+# Pin the branch: without --branch, wrangler uses the current git branch,
+# so running this off trunk silently creates a preview deployment instead
+# of updating production.
+npx wrangler pages deploy dist/ --project-name=crusty-metallian-net --branch=trunk
 
 if ($LASTEXITCODE -eq 0) {
     Write-Host "Deploy complete!" -ForegroundColor Green

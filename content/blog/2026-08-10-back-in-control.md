@@ -1,6 +1,7 @@
 +++
 title = "Back in Control"
 date = 2026-08-10
+aliases = ["/blog/2026-08-10-back-in-control/"]
 category = ["diary"]
 tags = ["song", "Sabaton"]
 draft = false

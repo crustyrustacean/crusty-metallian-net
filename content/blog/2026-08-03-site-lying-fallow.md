@@ -1,6 +1,7 @@
 +++
 title = "Site Lying Fallow"
 date = 2026-08-03
+aliases = ["/blog/2026-08-03-site-lying-fallow/"]
 categories = ["diary"]
 tags = ["meta"]
 draft = false

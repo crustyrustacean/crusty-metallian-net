@@ -1,6 +1,7 @@
 +++
 title = "Invincible Shield"
 date = 2026-01-10
+aliases = ["/blog/2026-01-10-judas-priest-invincible-shield/"]
 categories = ["diary"]
 tags = ["artist", "Judas Priest", "review"]
 draft = false

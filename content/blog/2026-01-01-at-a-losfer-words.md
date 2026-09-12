@@ -1,6 +1,7 @@
 +++
 title = "At a Losfer Words"
 date = 2026-01-01
+aliases = ["/blog/2026-01-01-at-a-losfer-words/"]
 categories = ["diary"]
 tags = ["trivia"]
 draft = false
