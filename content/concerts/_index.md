@@ -72,3 +72,6 @@ title = "Concerts"
 ## Upcoming in 2026
 - Sabaton, Wednesday, October 7 at the PNE Forum
 - W.A.S.P, Friday, October 23 at the Great Canadian Casino
+
+## Upcoming in 2027
+- Metallica, May 8, 2027, BC Place Stadium, Vancouver, BC
