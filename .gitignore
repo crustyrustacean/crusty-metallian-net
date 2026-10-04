@@ -4,6 +4,9 @@
 .rho
 logs
 
+# IDE configuration
+.zed
+
 # build assets
 dist/
 logs/
