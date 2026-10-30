@@ -72,5 +72,6 @@ title = "Concerts"
 - [W.A.S.P and KK's Priest](https://www.setlist.fm/setlist/wasp/2026/great-canadian-casino-vancouver-coquitlam-bc-canada-b7131ee.html), Friday, October 23, Great Canadian Casino Vancouver, Coquitlam, BC
 
 ## Upcoming in 2027
+- Iron Maiden, Friday, April 16, 2027, Rogers Arena, Vancouver, BC
 - Metallica, May 8, 2027, BC Place Stadium, Vancouver, BC
 - Def Leppard, Friday, May 14, 2027, Rogers Arena, Vancouver, BC
