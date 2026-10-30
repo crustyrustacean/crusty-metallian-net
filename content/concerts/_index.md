@@ -69,9 +69,7 @@ title = "Concerts"
 - [AC/DC and The Pretty Reckless](https://www.setlist.fm/setlist/acdc/2026/bc-place-stadium-vancouver-bc-canada-134f95c5.html), Thursday, August 13, BC Place, Vancouver, BC
 - [Propagandhi and The Flatliners](https://www.setlist.fm/setlist/propagandhi/2026/harbour-event-and-convention-centre-vancouver-bc-canada-337010fd.html), Friday, September 4, Plaza of Nations Event Centre, Vancouver, BC
 - [Sabaton, Pop Evil, Wings of Steel](https://www.setlist.fm/setlist/sabaton/2026/pne-forum-vancouver-bc-canada-63487abf.html), Thursday, October 8, PNE Forum, Vancouver, BC
-
-## Upcoming in 2026
-- W.A.S.P, Friday, October 23 at the Great Canadian Casino
+- [W.A.S.P and KK's Priest](https://www.setlist.fm/setlist/wasp/2026/great-canadian-casino-vancouver-coquitlam-bc-canada-b7131ee.html), Friday, October 23, Great Canadian Casino Vancouver, Coquitlam, BC
 
 ## Upcoming in 2027
 - Metallica, May 8, 2027, BC Place Stadium, Vancouver, BC
