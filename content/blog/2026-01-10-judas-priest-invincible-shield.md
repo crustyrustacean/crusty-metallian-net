@@ -5,9 +5,13 @@ aliases = ["/blog/2026-01-10-judas-priest-invincible-shield/"]
 categories = ["diary"]
 tags = ["artist", "Judas Priest", "review"]
 draft = false
+description = "Judas Priest's Invincible Shield is the strongest record of their 50-year career, and The Serpent and the King proves it."
 +++
 
-![Invincible Shield](/blog/judas-priest-invincible-shield-cover.png)
+<figure class="cover">
+  <img src="/blog/judas-priest-invincible-shield-cover.png" alt="Judas Priest — Invincible Shield album cover" width="200" height="200"
+       loading="lazy" decoding="async">
+</figure>
 
 *Invincible Shield* is the 19th studio album from my beloved band, Judas Priest. The year 2024 marked the band's 50th anniversary.  I've been listening to them since about 1984 and to me, *Invincible Shield* is their most incredible piece of work yet. It was released on March 8, 2024.
 

@@ -15,7 +15,7 @@
         {% for page in extra.taxonomy.pages %}
         <li>
             <article>
-                <h3><a href="{{ page.path }}">{{ page.title }}</a></h3>
+                <h2><a href="{{ page.path }}">{{ page.title }}</a></h2>
                 {% if page.date %}
                 <p class="meta">{{ page.date | date(format="%B %d, %Y") }}</p>
                 {% endif %}

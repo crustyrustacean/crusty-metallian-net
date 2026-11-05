@@ -1,0 +1,22 @@
+# Cloudflare Pages response headers.
+# Taxus copies this file from content/ to dist/ unchanged.
+
+# Fingerprinted image variants: the content hash in the filename makes
+# these immutable, so cache them for a year.
+/images/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Fonts are versioned by URL; long-cache them too.
+/static/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# CSS/JS carry no hash in the filename, so revalidate rather than
+# pin a long TTL that would strand readers on stale files.
+/css/*
+  Cache-Control: public, max-age=0, must-revalidate
+/static/ts/*
+  Cache-Control: public, max-age=0, must-revalidate
+
+# Data the widgets fetch.
+/static/data/*
+  Cache-Control: public, max-age=3600, must-revalidate

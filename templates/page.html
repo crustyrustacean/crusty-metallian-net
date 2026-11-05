@@ -18,6 +18,25 @@
         {% endif %}
     </header>
 
+    {# Taxus processes hero_image into responsive WebP variants and exposes
+       dimensions, so the image is sized, priority-hinted and never shifts. #}
+    {% if page.hero %}
+    <figure class="hero">
+        <picture>
+            {# `sizes` states how wide the image will actually lay out. It is
+               capped at the source's own width so a small cover art file is
+               never asked for at more than its intrinsic size. #}
+            <source srcset="{{ page.hero.srcset | safe }}"
+                    sizes="(max-width: 720px) min(calc(100vw - 2rem), {{ page.hero.width }}px), min(65ch, {{ page.hero.width }}px)"
+                    type="{{ page.hero.mime_type }}">
+            <img src="{{ page.hero.src | safe }}"
+                 alt="{{ page.hero.alt }}"
+                 width="{{ page.hero.width }}" height="{{ page.hero.height }}"
+                 fetchpriority="high" decoding="async">
+        </picture>
+    </figure>
+    {% endif %}
+
     <div class="prose">
         {{ page.content | safe }}
     </div>

@@ -5,7 +5,13 @@ aliases = ["/blog/2026-01-02-the-second-life-of-jason-newsted/"]
 categories = ["diary"]
 tags = ["artist", "Jason Newsted", "review"]
 draft = false
+description = "How Jason Newsted's 2013 album Heavy Metal Music landed exactly when I needed something new."
 +++
+
+<figure class="cover">
+  <img src="/blog/newsted-heavy-metal-music-cover.jpg" alt="Jason Newsted — Heavy Metal Music album cover" width="200" height="200"
+       loading="lazy" decoding="async">
+</figure>
 
 Jason Newsted, ex-bassist with Metallica, found a pretty successful second life after leaving the band in January 2001. His album *Heavy Metal Music* came onto my radar right when I needed something fresh.
 
@@ -14,8 +20,6 @@ In the fall of 2013, I needed something new, metal-wise. It felt like there was 
 It felt...*blah*.
 
 I'm not sure when exactly I discovered it, but somewhere in the fall the aptly named *Heavy Metal Music* by Jason Newsted came into view.
-
-![Heavy Metal Music](/blog/newsted-heavy-metal-music-cover.jpg)
 
 It instantly resonated.
 

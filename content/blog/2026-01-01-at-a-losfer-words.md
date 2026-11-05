@@ -5,13 +5,17 @@ aliases = ["/blog/2026-01-01-at-a-losfer-words/"]
 categories = ["diary"]
 tags = ["trivia"]
 draft = false
+description = "Iron Maiden's Powerslave turned 42, and it only took me a decade to get the joke behind 'Losfer Words'."
 +++
+
+<figure class="cover">
+  <img src="/blog/iron-maiden-powerslave-cover.jpg" alt="Iron Maiden — Powerslave album cover" width="500" height="500"
+       loading="lazy" decoding="async">
+</figure>
 
 It's a new day, and a new year. January 2026 is all about building a writing habit. I've got to remove the friction.
 
 I though I'd start with a small piece of silly trivia.
-
-![Powerslave](/blog/iron-maiden-powerslave-cover.jpg)
 
 The Iron Maiden album *Powerslave* was released on September 3, 1984, over *42 years* ago. It was Maiden's fifth studio album, and to this day is one of their absolutely most iconic pieces of work. I try not to think about the fact I was 13 when it came out. I think I received it on vinyl for a birthday...or Christmas...can't remember.
 

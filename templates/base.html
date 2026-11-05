@@ -3,20 +3,47 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="A heavy metal oriented music blog.">
+        <meta name="description" content="{{ page.description if page is defined and page.description else (section.description if section is defined and section.description else (site.description or 'A heavy metal oriented music blog.')) }}">
+
+        {# One canonical and one OG title/URL per page: the taxonomy templates
+           have neither `page` nor `section`, so they fall back to
+           extra.taxonomy, and only then to the site root. #}
+        {% set canonical = site.base_url ~ "/" %}
+        {% set og_title = site.name %}
+        {% set og_type = "website" %}
+        {% if page is defined %}
+          {% if page.permalink %}{% set_global canonical = page.permalink %}{% endif %}
+          {% if page.title %}{% set_global og_title = page.title %}{% endif %}
+          {% if page.date %}{% set_global og_type = "article" %}{% endif %}
+        {% elif section is defined %}
+          {% if section.permalink %}{% set_global canonical = section.permalink %}{% endif %}
+          {% if section.title %}{% set_global og_title = section.title %}{% endif %}
+        {% elif extra.taxonomy is defined %}
+          {% set_global canonical = site.base_url ~ extra.taxonomy.path %}
+          {% set_global og_title = extra.taxonomy.kind ~ ": " ~ (extra.taxonomy.name | default(value="index")) %}
+        {% endif %}
 
         <!-- Open Graph -->
-        <meta property="og:title" content="Crusty Metallian">
-        <meta property="og:description" content="A heavy metal oriented music blog.">
-        <meta property="og:url" content="https://crusty-metallian.net">
-        <meta property="og:type" content="website">
+        <meta property="og:site_name" content="{{ site.name }}">
+        <meta property="og:title" content="{{ og_title }}">
+        <meta property="og:description" content="{{ page.description if page is defined and page.description else (section.description if section is defined and section.description else (site.description or 'A heavy metal oriented music blog.')) }}">
+        <meta property="og:url" content="{{ canonical }}">
+        <meta property="og:type" content="{{ og_type }}">
 
-        <!-- Twitter/X -->
-        <meta name="twitter:card" content="summary_large_image">
+        <!-- Twitter/X. Declared as `summary` until the site has a real
+             raster share image: hero variants are WebP, which the cards
+             do not render. -->
+        <meta name="twitter:card" content="summary">
 
         <meta name="theme-color" content="#1a1a2e">
-        <link rel="canonical" href="https://crusty-metallian.net">
+        <link rel="canonical" href="{{ canonical }}">
+        <link rel="icon" href="/static/favicon.ico" sizes="32x32">
         <link rel="icon" type="image/png" href="/static/favicon.png">
+
+        <!-- Oswald is self-hosted (see styles/main.scss) and preloaded so
+             headings paint in the right face on first view. -->
+        <link rel="preload" href="/static/fonts/oswald-latin.woff2" as="font" type="font/woff2" crossorigin>
+
         <link rel="stylesheet" href="/css/main.css">
         <title>{{ site.name }} | {% block title %}{% endblock %}</title>
 
@@ -27,6 +54,7 @@
             plausible.init()
         </script>
 
+        {% block meta %}{% endblock meta %}
     </head>
 <body>
     <!-- header section -->

@@ -1,5 +1,6 @@
 +++
 title = "About"
+description = "Who writes The Crusty Metallian: growing up on radio pop, falling for glam metal, and never recovering from Master of Puppets."
 +++
 
 ## About the Author

@@ -5,9 +5,16 @@ aliases = ["/blog/2026-08-10-back-in-control/"]
 category = ["diary"]
 tags = ["song", "Sabaton"]
 draft = false
+description = "Sabaton's Back in Control brought the Falklands War and the sinking of HMS Sheffield back into focus after forty years."
 +++
 
-![Attero Dominatus](/blog/sabaton-attero-dominatus.jpg)
+<figure class="cover">
+  <img src="/blog/sabaton-attero-dominatus-300w.webp"
+       srcset="/blog/sabaton-attero-dominatus-300w.webp 1x,
+               /blog/sabaton-attero-dominatus-600w.webp 2x"
+       alt="Sabaton — Attero Dominatus album cover" width="300" height="300"
+       loading="lazy" decoding="async">
+</figure>
 
 In 1982 we lived in Ottawa. I was eleven.
 

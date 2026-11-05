@@ -1,5 +1,6 @@
 +++
 title = "Concerts"
+description = "Every concert I have been to since 1985, newest and oldest, with setlist.fm links."
 +++
 
 ## Concerts

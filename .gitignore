@@ -10,3 +10,6 @@ logs
 # build assets
 dist/
 logs/
+
+# Lighthouse reports (local audits)
+.lighthouse/
