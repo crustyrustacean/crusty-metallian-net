@@ -15,24 +15,27 @@ function pickRandom<T>(items: T[]): T | undefined {
 }
 
 // The current-rotation widget is streamed in by Datastar from the music feed
-// service (see `data-init` in templates/home.html). The service patches with
-// `mode append`, so the widget lands *after* the "Loading current rotation…"
-// placeholder rather than replacing it, and nothing clears `aria-busy`.
-// Watch for the patch and tidy up once the widget is in the DOM.
+// service (see `data-init` in templates/home.html). Removing the placeholder is
+// the service's job: it sends a `#rotation-loading` removal alongside the entry
+// it appends (documented in the service's README). What is left here is only
+// what the service cannot know — that entries are appended rather than replaced,
+// so a reconnect stacks copies, and that `aria-busy` belongs to this page.
 function settleRotationWidget(widget: HTMLElement): boolean {
   const widgets = widget.querySelectorAll(".rotation-widget");
   if (widgets.length === 0) {
     return false;
   }
 
-  // A reconnecting stream would append a second copy; keep the newest.
+  // A reconnecting stream appends another copy; keep the newest.
   widgets.forEach((stale, index) => {
     if (index < widgets.length - 1) {
       stale.remove();
     }
   });
 
-  widget.querySelector(".widget-loading")?.remove();
+  // Reaching here implies the service has answered, so the notice is spent even
+  // if its own removal patch has not landed yet (or arrived first).
+  widget.querySelector("#rotation-loading")?.remove();
   widget.removeAttribute("aria-busy");
   return true;
 }
@@ -42,7 +45,7 @@ function showRotationOffline(widget: HTMLElement): void {
   if (widget.querySelector(".rotation-widget")) {
     return;
   }
-  const loading = widget.querySelector(".widget-loading");
+  const loading = widget.querySelector("#rotation-loading");
   if (loading) {
     loading.textContent = "Rotation is offline right now.";
   }

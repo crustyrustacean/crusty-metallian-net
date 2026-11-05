@@ -9,11 +9,14 @@
     {{ page.content | safe }}
 </section>
 
-{# Datastar streams the current rotation in from the music feed service. #}
+{# Datastar streams the current rotation in from the music feed service.
+   The placeholder's id is part of the service's stream contract: it sends a
+   removal for `#rotation-loading` alongside the entry it appends, so the
+   notice does not survive underneath the widget. #}
 <section id="rotation-list"
          aria-busy="true"
          data-init="@get('https://musicfeed.crusty-metallian.net/rotation')">
-    <p class="widget-loading">Loading current rotation&hellip;</p>
+    <p id="rotation-loading" class="widget-loading">Loading current rotation&hellip;</p>
 </section>
 
 <section class="recent-posts">
