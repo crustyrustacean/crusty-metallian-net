@@ -1,5 +1,41 @@
 # Cloudflare Pages response headers.
 # Taxus copies this file from content/ to dist/ unchanged.
+#
+# Rules that match the same path COMBINE their headers; the later value does
+# not replace the earlier one, it is appended comma-separated. A blanket `/*`
+# Cache-Control here would therefore emit `max-age=0, must-revalidate,
+# max-age=31536000, immutable` on every image and font, which caches are free
+# to read either way. So HTML is covered by explicit rules and assets keep
+# exactly one each.
+#
+# Pages sends HTML with `s-maxage=604800` by default, so a deleted page would
+# otherwise be served from the edge for a week - that is how /photos/ outlived
+# its own removal.
+
+# Pages and sections. max-age=0 keeps the browser revalidating; s-maxage
+# clears the edge copy that Pages would otherwise pin for a week.
+/
+  Cache-Control: public, max-age=0, s-maxage=0, must-revalidate
+/blog/*
+  Cache-Control: public, max-age=0, s-maxage=0, must-revalidate
+/concerts/*
+  Cache-Control: public, max-age=0, s-maxage=0, must-revalidate
+/galleries/*
+  Cache-Control: public, max-age=0, s-maxage=0, must-revalidate
+/stats/*
+  Cache-Control: public, max-age=0, s-maxage=0, must-revalidate
+/about/*
+  Cache-Control: public, max-age=0, s-maxage=0, must-revalidate
+/categories/*
+  Cache-Control: public, max-age=0, s-maxage=0, must-revalidate
+/tags/*
+  Cache-Control: public, max-age=0, s-maxage=0, must-revalidate
+/feed.xml
+  Cache-Control: public, max-age=0, s-maxage=0, must-revalidate
+/sitemap.xml
+  Cache-Control: public, max-age=0, s-maxage=0, must-revalidate
+/robots.txt
+  Cache-Control: public, max-age=0, s-maxage=0, must-revalidate
 
 # Fingerprinted image variants: the content hash in the filename makes
 # these immutable, so cache them for a year.
