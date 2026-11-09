@@ -56,3 +56,30 @@
     </nav>
 </section>
 {% endblock %}
+
+{# JSON-LD. Tera here has no json_encode filter and its autoescape emits
+   &quot;, which is not valid inside <script type="application/ld+json">.
+   Values are escaped by hand and emitted with `safe`. Two things matter:
+   backslashes and double quotes must be escaped or the JSON is invalid,
+   and the literal `</` must not appear because it can close the script
+   element early - so `</` becomes `&lt;/`, which a JSON parser reads back
+   as `</`. #}
+{% block structured_data %}
+{% if page.date %}
+{% set ld_title = page.title | replace(from='\\', to='\\\\') | replace(from='"', to='\\"') | replace(from='</', to='&lt;/') %}
+{% set ld_desc = (page.description if page.description is defined and page.description else site.description) | replace(from='\\', to='\\\\') | replace(from='"', to='\\"') | replace(from='</', to='&lt;/') %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "{{ ld_title | safe }}",
+  "description": "{{ ld_desc | safe }}",
+  "datePublished": "{{ page.date }}",
+  "author": { "@type": "Person", "name": "{{ site.author | replace(from='\\', to='\\\\') | replace(from='"', to='\\"') | replace(from='</', to='&lt;/') | safe }}" },
+  "publisher": { "@type": "Organization", "name": "{{ site.name | replace(from='\\', to='\\\\') | replace(from='"', to='\\"') | replace(from='</', to='&lt;/') | safe }}" },
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "{{ page.permalink }}" },
+  "url": "{{ page.permalink }}"
+}
+</script>
+{% endif %}
+{% endblock %}

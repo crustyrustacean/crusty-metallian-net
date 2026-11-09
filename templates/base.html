@@ -78,6 +78,10 @@
         </script>
 
         {% block meta %}{% endblock meta %}
+
+        {# Per-page structured data. Default is nothing; page.html emits a
+           BlogPosting for dated posts. #}
+        {% block structured_data %}{% endblock structured_data %}
     </head>
 <body>
     <!-- header section -->

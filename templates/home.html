@@ -29,3 +29,18 @@
 </section>
 
 {% endblock %}
+
+{# WebSite node, home page only: tells an engine which name and URL
+   represent the site itself. Escaping is the same recipe as page.html. #}
+{% block structured_data %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "{{ site.name  | replace(from='\\', to='\\\\') | replace(from='"', to='\\"') | safe }}",
+  "description": "{{ site.description | replace(from='\\', to='\\\\') | replace(from='"', to='\\"') | replace(from='</', to='&lt;/') | safe }}",
+  "url": "{{ site.base_url }}/",
+  "author": { "@type": "Person", "name": "{{ site.author | replace(from='\\', to='\\\\') | replace(from='"', to='\\"') | safe }}" }
+}
+</script>
+{% endblock %}

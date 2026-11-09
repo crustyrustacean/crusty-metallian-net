@@ -73,3 +73,20 @@
     {% endif %}
 </section>
 {% endblock %}
+
+{# Person node, About page only: /about/ is the page that describes
+   the author, so the two are tied together. #}
+{% block structured_data %}
+{% if section.path == "/about/" %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "{{ site.author | replace(from='\\', to='\\\\') | replace(from='"', to='\\"') | replace(from='</', to='&lt;/') | safe }}",
+  "description": "{{ page.description | replace(from='\\', to='\\\\') | replace(from='"', to='\\"') | replace(from='</', to='&lt;/') | safe }}",
+  "url": "{{ page.permalink }}",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "{{ page.permalink }}" }
+}
+</script>
+{% endif %}
+{% endblock %}
