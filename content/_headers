@@ -56,3 +56,8 @@
 # Data the widgets fetch.
 /static/data/*
   Cache-Control: public, max-age=3600, must-revalidate
+
+# The social card. Unhashed, so it revalidates rather than being pinned -
+# replacing the image should not need a cache purge.
+/static/images/social/*
+  Cache-Control: public, max-age=0, s-maxage=0, must-revalidate
