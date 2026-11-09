@@ -155,8 +155,16 @@
     padding: var(--space-lg) var(--space-md);
     border-block-end: var(--border-width) solid var(--border);
 
-    & h1 {
+    /* The site name is a <p>, not an <h1>: content pages own the h1. The
+       font properties are restated here because the base layer only sets
+       them on real headings. */
+    & .site-title {
+      font-family: var(--font-heading);
       font-size: clamp(1.75rem, 5vw, 2.5rem);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      line-height: 1.2;
+      text-wrap: balance;
 
       & a {
         color: var(--text-primary);
@@ -206,7 +214,21 @@
       margin-block-end: var(--space-xl);
     }
 
-    & h2 {
+    /* The page-level title. A class rather than a positional selector: a
+       bare `#main h2` also reached article cards and prose, and a bare
+       `section > h1` also reached taxonomy term pages, which have never
+       carried this border. */
+    & .page-title {
+      margin-block-end: var(--space-lg);
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      border-block-end: 2px solid var(--accent);
+      padding-block-end: var(--space-sm);
+    }
+
+    /* Markdown h2s inside rendered content. This is the same treatment the
+       page title gets, which prose h2s used to receive by way of a broad
+       `#main h2`. Scoped to .prose so it cannot reach an article card. */
+    & .prose h2 {
       margin-block-end: var(--space-lg);
       font-size: clamp(1.5rem, 4vw, 2rem);
       border-block-end: 2px solid var(--accent);
@@ -230,7 +252,9 @@
       margin-block-end: var(--space-md);
     }
 
-    & h3 {
+    /* Listing cards use h2: the page title is the h1, and an h3 here would
+       skip a level. */
+    & h2 {
       margin-block-end: var(--space-sm);
       font-size: 1.25rem;
 
@@ -326,8 +350,7 @@
         }
       }
 
-      & h2,
-      & h3 {
+      & h2 {
         font-family: var(--font-heading);
         font-size: 1.1rem;
         text-transform: uppercase;
