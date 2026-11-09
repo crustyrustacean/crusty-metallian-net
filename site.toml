@@ -1,6 +1,11 @@
 [site]
 name = "The Crusty Metallian"
 base_url = "https://crusty-metallian.net"
+# Both feed the <meta name="description"> fallback, the Open Graph
+# description and the RSS channel description. Unset, the feed shipped an
+# empty <description> and every share card had no summary.
+description = "A heavy metal oriented music blog: reviews, concert memories and photos."
+author = "Jeffery D. Mitchell"
 
 [build]
 content_dir = "content"

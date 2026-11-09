@@ -2,4 +2,8 @@
 
 <footer id="footer">
     <p>&copy; {{ now.year }} | Jeffery D. Mitchell | All Rights Reserved | Site built with: <a href="https://get-taxus-org.pages.dev">Taxus</a></p>
+    {# Visible companion to the <link rel="alternate"> in base.html: feeds
+       are only discoverable automatically if the reader's client sniffs the
+       <head>, which not every one does. #}
+    <p class="feed-link"><a href="/feed.xml">RSS feed</a></p>
 </footer>

@@ -52,6 +52,11 @@
         <link rel="icon" href="/static/favicon.ico" sizes="32x32">
         <link rel="icon" type="image/png" href="/static/favicon.png">
 
+        {# Feed autodiscovery: without this a reader has to guess the URL.
+           Only feed.xml is generated - [feed] is absent from site.toml, so
+           Taxus uses its defaults (RSS on, Atom off). #}
+        <link rel="alternate" type="application/rss+xml" title="{{ site.name }}" href="/feed.xml">
+
         <!-- Oswald is self-hosted (see styles/main.scss) and preloaded so
              headings paint in the right face on first view. -->
         <link rel="preload" href="/static/fonts/oswald-latin.woff2" as="font" type="font/woff2" crossorigin>
