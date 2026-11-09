@@ -6,6 +6,10 @@
 <section>
     <h2>{{ page.title }}</h2>
 
+    {# Crawlable text: the leaderboard below only exists after the stream
+       lands, so the page needs something to say before that. #}
+    <p>Artist spin counts from the rotation - who's been getting the most attention lately?</p>
+
     {# Same stream contract as the rotation widget: the service appends the
        widget to `#artist-stats-list` and removes `#artist-stats-loading`. #}
     <div id="artist-stats-list"
