@@ -2,6 +2,9 @@
     <html lang="en">
     <head>
         <meta charset="UTF-8">
+        {# Site-wide author. A single-author blog needs no per-page override;
+           page.html and the JSON-LD both read the same site.author. #}
+        <meta name="author" content="{{ site.author }}">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         {# A suffix block so section.html can vary paginated pages without
            base.html needing to reach `section` - on a section page the
@@ -35,6 +38,13 @@
         <meta property="og:description" content="{{ page.description if page is defined and page.description else (section.description if section is defined and section.description else site.description) }}{% block og_description_suffix %}{% endblock %}">
         <meta property="og:url" content="{{ canonical }}">
         <meta property="og:type" content="{{ og_type }}">
+        {# article:* only makes sense when og:type is article, which base.html
+           sets for any page carrying a date. Values are the page's own; there
+           is no per-post author override in this site. #}
+        {% if og_type == "article" and page.date %}
+        <meta property="article:published_time" content="{{ page.date }}T00:00:00Z">
+        <meta property="article:author" content="{{ site.author }}">
+        {% endif %}
 
         {# One raster card for the whole site. Hero variants are WebP, which
            the card scrapers do not render, and the image pipeline emits a
