@@ -1,6 +1,15 @@
 {% extends "base.html" %}
 
-{% block title %}{{ section.title }}{% endblock %}
+{# Page 2 and 3 of a paginated section would otherwise share page 1's
+   title and description, giving a search engine no reason to surface
+   them. #}
+{% block title %}{{ section.title }}{% if section.pagination and section.pagination.current > 1 %} - Page {{ section.pagination.current }}{% endif %}{% endblock %}
+
+{# Page 2 onward: match the <title>, so a link to a later page does
+   not look identical to a link to page 1 when shared. #}
+{% block og_title_suffix %}{% if section.pagination and section.pagination.current > 1 %} - Page {{ section.pagination.current }}{% endif %}{% endblock %}
+{% block meta_description_suffix %}{% if section.pagination and section.pagination.current > 1 %} Page {{ section.pagination.current }}.{% endif %}{% endblock %}
+{% block og_description_suffix %}{% if section.pagination and section.pagination.current > 1 %} Page {{ section.pagination.current }}.{% endif %}{% endblock %}
 
 {% block content %}
 <section>

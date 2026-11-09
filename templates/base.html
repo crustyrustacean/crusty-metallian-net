@@ -3,7 +3,11 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="{{ page.description if page is defined and page.description else (section.description if section is defined and section.description else (site.description or 'A heavy metal oriented music blog.')) }}">
+        {# A suffix block so section.html can vary paginated pages without
+           base.html needing to reach `section` - on a section page the
+           _index.md lands in context as `page`, and `section` is not in
+           scope here at all. #}
+        <meta name="description" content="{{ page.description if page is defined and page.description else (section.description if section is defined and section.description else site.description) }}{% block meta_description_suffix %}{% endblock %}">
 
         {# One canonical and one OG title/URL per page: the taxonomy templates
            have neither `page` nor `section`, so they fall back to
@@ -22,11 +26,13 @@
           {% set_global canonical = site.base_url ~ extra.taxonomy.path %}
           {% set_global og_title = extra.taxonomy.kind ~ ": " ~ (extra.taxonomy.name | default(value="index")) %}
         {% endif %}
-
         <!-- Open Graph -->
         <meta property="og:site_name" content="{{ site.name }}">
-        <meta property="og:title" content="{{ og_title }}">
-        <meta property="og:description" content="{{ page.description if page is defined and page.description else (section.description if section is defined and section.description else (site.description or 'A heavy metal oriented music blog.')) }}">
+        {# A suffix block rather than more logic here: on a section page the
+           _index.md lands in context as `page`, so the `section` branch
+           above is never taken - section.pagination is unreachable. #}
+        <meta property="og:title" content="{{ og_title }}{% block og_title_suffix %}{% endblock %}">
+        <meta property="og:description" content="{{ page.description if page is defined and page.description else (section.description if section is defined and section.description else site.description) }}{% block og_description_suffix %}{% endblock %}">
         <meta property="og:url" content="{{ canonical }}">
         <meta property="og:type" content="{{ og_type }}">
 
