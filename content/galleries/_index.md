@@ -1,9 +1,10 @@
 +++
 title = "Galleries"
 description = "Photo galleries from select concerts past."
-+++
 
-## Photo Galleries
+[extra]
+page_title = "Photo Galleries"
++++
 
 Here be links to galleries from select concerts past.
 

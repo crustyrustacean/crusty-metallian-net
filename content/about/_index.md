@@ -1,9 +1,10 @@
 +++
 title = "About"
 description = "Who writes The Crusty Metallian: growing up on radio pop, falling for glam metal, and never recovering from Master of Puppets."
-+++
 
-## About the Author
+[extra]
+page_title = "About the Author"
++++
 
 > Give me fuel, give me fire, give me that which I desire! - Metallica, Fuel
 

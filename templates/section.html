@@ -16,7 +16,7 @@
     {# The page's own title is the h1. Sections whose _index.md content
        opens with a heading of the same name have that heading removed, so
        the title is not printed twice. #}
-    <h1 class="page-title">{{ section.title }}</h1>
+    <h1 class="page-title">{{ extra.page_title | default(value=section.title) }}</h1>
 
     {% if not section.content %}
     <nav class="taxonomy-nav">

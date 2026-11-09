@@ -161,6 +161,9 @@
     & .site-title {
       font-family: var(--font-heading);
       font-size: clamp(1.75rem, 5vw, 2.5rem);
+      /* Headings inherit the browser's bold default; a <p> does not. Without
+         this the site name renders 300 degrees lighter than it did as an h1. */
+      font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.05em;
       line-height: 1.2;
@@ -225,9 +228,11 @@
       padding-block-end: var(--space-sm);
     }
 
-    /* Markdown h2s inside rendered content. This is the same treatment the
-       page title gets, which prose h2s used to receive by way of a broad
-       `#main h2`. Scoped to .prose so it cannot reach an article card. */
+    /* Markdown headings inside rendered content. Same treatment the page
+       title gets, which prose headings used to receive by way of a broad
+       `#main h2`. Scoped to .prose so it cannot reach an article card.
+       `h1` here is the home page tagline; no content uses a top-level `#`. */
+    & .prose h1,
     & .prose h2 {
       margin-block-end: var(--space-lg);
       font-size: clamp(1.5rem, 4vw, 2rem);
@@ -366,6 +371,17 @@
     }
   }
 
+  /* Term-page entries (/tags/foo/, /categories/foo/). These carried the page
+     title treatment only because a broad `#main h2` outranked the card rule
+     above; scoping that rule to .page-title exposed the card style and would
+     have quietly restyled every entry. Preserved as it shipped. */
+  .page-list li h2 {
+    margin-block-end: var(--space-lg);
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    border-block-end: 2px solid var(--accent);
+    padding-block-end: var(--space-sm);
+  }
+
   /* Page Header (individual posts) */
   .page-header {
     margin-block-end: var(--space-lg);
@@ -502,7 +518,9 @@
 
   /* ===== Concerts Styles ===== */
   .prose {
-    &:has(h2) {
+    /* Concert-list styling: year headings in the /concerts/ page. Excludes
+       the home page, whose body heading is a section subhead, not a year. */
+    &:has(h2):not(.home-prose) {
       h2 {
         font-size: 1.5rem;
         margin-block-start: var(--space-xl);
@@ -540,6 +558,17 @@
         }
       }
     }
+  }
+
+  /* Home body heading. Kept at the size it had as an h3, so promoting it to
+     h2 fixed a skipped level without changing how it looks. The id is there
+     because `#main .prose h2` would otherwise win on specificity. */
+  #main .prose.home-prose h2 {
+    font-size: 1.25rem;
+    margin-block-start: var(--space-lg);
+    margin-block-end: var(--space-sm);
+    padding-block-end: 0;
+    border-block-end: 0;
   }
 
   /* ===== Prose/Content Styling for Markdown ===== */
