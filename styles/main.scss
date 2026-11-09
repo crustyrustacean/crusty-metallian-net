@@ -1,5 +1,5 @@
 /* ===== CSS Layers for cascade control ===== */
-@layer reset, theme, base, components, utilities;
+@layer reset, theme, base, components;
 
 /* ===== Theme Layer ===== */
 @layer theme {
@@ -213,10 +213,6 @@
       padding-block-end: var(--space-sm);
     }
 
-    /* Gallery needs wider layout */
-    &:has(.gallery-grid) {
-      inline-size: min(1200px, 100% - var(--space-lg));
-    }
   }
 
   /* Article Cards */
@@ -523,106 +519,6 @@
     }
   }
 
-  /* ===== Gallery Styles ===== */
-  .intro {
-    margin-block-end: var(--space-xl);
-    padding: var(--space-lg);
-    background: var(--bg-card);
-    border-inline-start: 3px solid var(--accent);
-
-    & p {
-      line-height: var(--line-height);
-    }
-  }
-
-  .gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
-    gap: var(--space-lg);
-  }
-
-  .gallery-item {
-    container-type: inline-size;
-    background: var(--bg-card);
-    border-radius: 4px;
-    overflow: hidden;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-
-    &:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 24px oklch(0% 0 0 / 0.4);
-    }
-
-    & > img {
-      inline-size: 100%;
-      block-size: auto;
-      aspect-ratio: 4 / 3;
-      object-fit: cover;
-      cursor: pointer;
-      transition: opacity 0.2s ease;
-
-      &:hover {
-        opacity: 0.9;
-      }
-    }
-  }
-
-  .photo-info {
-    padding: var(--space-md);
-
-    & > p {
-      margin-block-end: var(--space-xs);
-      line-height: 1.4;
-
-      &:first-child {
-        font-family: var(--font-heading);
-        font-size: 1.1rem;
-        text-transform: uppercase;
-        letter-spacing: 0.03em;
-        color: var(--text-primary);
-        margin-block-end: var(--space-sm);
-      }
-
-      &:nth-child(2) {
-        font-size: 0.9rem;
-        color: var(--text-muted);
-      }
-
-      &:nth-child(3) {
-        font-size: 0.8rem;
-        color: var(--text-muted);
-      }
-
-      &:nth-child(4) {
-        font-size: 0.85rem;
-        color: var(--text-primary);
-        margin-block-start: var(--space-sm);
-        margin-block-end: var(--space-md);
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-      }
-    }
-  }
-
-  .keyword {
-    display: inline-block;
-    font-size: 0.75rem;
-    padding: var(--space-xs) var(--space-sm);
-    margin-inline-end: var(--space-xs);
-    margin-block-end: var(--space-xs);
-    background: var(--border);
-    color: var(--text-muted);
-    border-radius: 2px;
-    transition: background-color 0.2s ease, color 0.2s ease;
-
-    &:hover {
-      background: var(--accent-deep);
-      color: var(--text-primary);
-    }
-  }
-
   /* ===== Prose/Content Styling for Markdown ===== */
   .prose {
     /* Vertical rhythm - space between block elements */
@@ -813,12 +709,6 @@
     }
   }
 
-  /* Photo gallery figures (content/photos). The caption is the figure's
-     own figcaption, so no list markup is needed in the markdown. */
-  .prose figure.photo {
-    margin-block: 0 var(--space-lg);
-  }
-
   /* Both home-page widgets are filled in after load. Reserving their height
      keeps the footer from jumping when the fetch resolves (CLS). */
   #rotation-list,
@@ -924,6 +814,67 @@
     }
   }
 
+  .error-page {
+    text-align: center;
+
+    & h1 {
+      font-size: 3rem;
+      color: var(--accent);
+    }
+
+    & h2 {
+      border-block-end: none;
+      font-size: 1.5rem;
+    }
+  }
+
+  /* ===== Artist Stats Widget ===== */
+  .artist-stats-widget {
+    background: var(--bg-card);
+    padding: var(--space-lg);
+    border-radius: 4px;
+    border-inline-start: 3px solid var(--accent);
+  }
+
+  .artist-stats-list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--space-sm);
+  }
+
+  .artist-stats-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--space-md);
+    padding-block-end: var(--space-sm);
+    border-block-end: 1px solid var(--border);
+
+    &:last-child {
+      padding-block-end: 0;
+      border-block-end: none;
+    }
+  }
+
+  .artist-stats-artist {
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--text-primary);
+  }
+
+  .artist-stats-spins {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .artist-stats-empty {
+    color: var(--text-muted);
+  }
+
   /* ===== Trivia Widget ===== */
   .trivia-widget {
     background: var(--bg-card);
@@ -946,18 +897,6 @@
   }
 }
 
-/* ===== Utilities Layer ===== */
-@layer utilities {
-  .visually-hidden {
-    clip: rect(0 0 0 0);
-    clip-path: inset(50%);
-    block-size: 1px;
-    inline-size: 1px;
-    overflow: hidden;
-    position: absolute;
-    white-space: nowrap;
-  }
-}
 
 /* ===== Galleries Index (fetched from metallian-photos API) ===== */
 /* The page's own script injects <li class="gallery-card"> items here, so

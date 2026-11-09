@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page.title }}{% endblock %}
+
+{% block content %}
+<section>
+    <h2>{{ page.title }}</h2>
+
+    {# Same stream contract as the rotation widget: the service appends the
+       widget to `#artist-stats-list` and removes `#artist-stats-loading`. #}
+    <div id="artist-stats-list"
+         aria-busy="true"
+         data-init="@get('https://musicfeed.crusty-metallian.net/stats')">
+        <p id="artist-stats-loading" class="widget-loading">Loading artist stats&hellip;</p>
+    </div>
+</section>
+{% endblock %}
