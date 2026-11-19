@@ -75,7 +75,7 @@
   "headline": "{{ ld_title | safe }}",
   "description": "{{ ld_desc | safe }}",
   "datePublished": "{{ page.date }}",
-  "author": { "@type": "Person", "name": "{{ site.author | replace(from='\\', to='\\\\') | replace(from='"', to='\\"') | replace(from='</', to='&lt;/') | safe }}" },
+  "author": { "@type": "Person", "name": "{{ site.author | replace(from='\\', to='\\\\') | replace(from='"', to='\\"') | replace(from='</', to='&lt;/') | safe }}", "url": "{{ site.base_url }}/about/" },
   "publisher": { "@type": "Organization", "name": "{{ site.name | replace(from='\\', to='\\\\') | replace(from='"', to='\\"') | replace(from='</', to='&lt;/') | safe }}" },
   "mainEntityOfPage": { "@type": "WebPage", "@id": "{{ page.permalink }}" },
   "url": "{{ page.permalink }}"
