@@ -5,7 +5,7 @@ use crate::database::DatabaseBackend;
 use crate::domain::UpdatePhoto;
 use crate::routes::sse::datastar_sse;
 use crate::template::TemplateRenderer;
-use crate::utils::{compact_html, e400};
+use crate::utils::e400;
 use actix_identity::Identity;
 use actix_web::Responder;
 use actix_web::web::{Data, Path};
@@ -40,7 +40,7 @@ pub async fn edit_photo(
     let photo = database.read_photo(id).await?;
 
     let context = caption_context(id, &photo.band, &photo.tour, &photo.venue);
-    let html = compact_html(&templates.render("partials/edit_form.html", &context)?);
+    let html = templates.render("partials/edit_form.html", &context)?;
 
     Ok(datastar_sse([PatchElements::new(html).into_datastar_event()]))
 }
@@ -65,7 +65,7 @@ pub async fn update_photo(
         "tour": photo.tour,
         "venue": photo.venue,
     });
-    let html = compact_html(&templates.render("partials/caption.html", &context)?);
+    let html = templates.render("partials/caption.html", &context)?;
 
     Ok(datastar_sse([PatchElements::new(html).into_datastar_event()]))
 }
@@ -87,7 +87,7 @@ pub async fn cancel_edit(
         "tour": photo.tour,
         "venue": photo.venue,
     });
-    let html = compact_html(&templates.render("partials/caption.html", &context)?);
+    let html = templates.render("partials/caption.html", &context)?;
 
     Ok(datastar_sse([PatchElements::new(html).into_datastar_event()]))
 }

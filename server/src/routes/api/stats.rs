@@ -4,7 +4,7 @@ use crate::database::{DatabaseBackend, DatabaseError};
 use crate::domain::ArtistStat;
 use crate::routes::sse::datastar_sse;
 use crate::template::{TemplateError, TemplateRenderer};
-use crate::utils::{compact_html, error_chain_fmt};
+use crate::utils::error_chain_fmt;
 use actix_web::{HttpResponse, Responder, ResponseError, web};
 use datastar::prelude::*;
 use serde::Serialize;
@@ -48,7 +48,7 @@ fn render_artist_stats(
     artist_stats: &[ArtistStat],
 ) -> Result<String, ArtistStatError> {
     let ctx = serde_json::to_value(ArtistStatsContext { artist_stats })?;
-    Ok(compact_html(&templates.render("artist_stats.html", &ctx)?))
+    Ok(templates.render("artist_stats.html", &ctx)?)
 }
 
 pub async fn get_artist_stats(

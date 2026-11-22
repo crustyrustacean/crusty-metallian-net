@@ -6,7 +6,7 @@ use crate::domain::{NewRotationEntry, RotationEntry};
 use crate::metadata::{AlbumQuery, MetadataClient};
 use crate::routes::sse::datastar_sse;
 use crate::template::{TemplateError, TemplateRenderer};
-use crate::utils::{compact_html, error_chain_fmt};
+use crate::utils::error_chain_fmt;
 use actix_identity::Identity;
 use actix_web::{HttpResponse, Responder, ResponseError, http::StatusCode, web};
 use datastar::actix_web::ReadSignals;
@@ -81,7 +81,7 @@ fn render_rotation(
     let ctx = serde_json::to_value(RotationTemplateContext {
         rotation_entry: entry,
     })?;
-    Ok(compact_html(&templates.render(template, &ctx)?))
+    Ok(templates.render(template, &ctx)?)
 }
 
 #[derive(Deserialize)]
