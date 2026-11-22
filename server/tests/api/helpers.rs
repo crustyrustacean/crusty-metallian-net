@@ -1,7 +1,10 @@
 // tests/api/helpers.rs
 
 // dependencies
-use server::configuration::{Settings, get_configuration};
+use crate::metadata_stub::MetadataStubs;
+use server::configuration::{DatabaseSettings, Settings, get_configuration};
+use server::database::{DatabaseBackend, SqliteRepository};
+use server::metadata::MetadataClient;
 use server::startup::Application;
 use server::telemetry::{get_subscriber, init_subscriber};
 use server::template::{TemplateRenderer, tera::TeraRenderer};
@@ -50,11 +53,14 @@ impl Drop for TempDir {
     }
 }
 
+#[allow(dead_code)]
 pub struct TestApp {
     pub address: String,
-    #[allow(dead_code)]
     pub port: u16,
-    api_client: reqwest::Client,
+    pub api_client: reqwest::Client,
+    pub unauthenticated_client: reqwest::Client,
+    pub metadata_stub: MetadataStubs,
+    pub database_dir: tempfile::TempDir,
 }
 
 impl TestApp {
@@ -68,16 +74,22 @@ impl TestApp {
 }
 
 pub async fn spawn_app() -> TestApp {
+    let stub = MetadataStubs::miss().await;
+    spawn_app_against(stub).await
+}
+
+pub async fn spawn_app_against(metadata_stub: MetadataStubs) -> TestApp {
     let configuration = test_configuration();
     let template_renderer: Arc<dyn TemplateRenderer> = Arc::new(
         TeraRenderer::new(&configuration.application.templates_glob)
             .expect("Failed to build the template renderer."),
     );
-    spawn_app_with(configuration, template_renderer).await
+    spawn_app_with(configuration, template_renderer, metadata_stub).await
 }
 
 pub async fn spawn_app_with_renderer(template_renderer: Arc<dyn TemplateRenderer>) -> TestApp {
-    spawn_app_with(test_configuration(), template_renderer).await
+    let stub = MetadataStubs::miss().await;
+    spawn_app_with(test_configuration(), template_renderer, stub).await
 }
 
 pub async fn spawn_app_with_static_dir(static_dir: impl Into<String>) -> TestApp {
@@ -87,7 +99,8 @@ pub async fn spawn_app_with_static_dir(static_dir: impl Into<String>) -> TestApp
         TeraRenderer::new(&configuration.application.templates_glob)
             .expect("Failed to build the template renderer."),
     );
-    spawn_app_with(configuration, template_renderer).await
+    let stub = MetadataStubs::miss().await;
+    spawn_app_with(configuration, template_renderer, stub).await
 }
 
 fn test_configuration() -> Settings {
@@ -99,16 +112,50 @@ fn test_configuration() -> Settings {
 async fn spawn_app_with(
     configuration: Settings,
     template_renderer: Arc<dyn TemplateRenderer>,
+    metadata_stub: MetadataStubs,
 ) -> TestApp {
     LazyLock::force(&TRACING);
 
-    let application = Application::build(configuration, template_renderer)
+    let database_dir = tempfile::tempdir().expect("Failed to create a temp directory");
+    let database_settings = DatabaseSettings {
+        path: database_dir.path().join("test.db").display().to_string(),
+        max_connections: Some(1),
+    };
+    let database: Arc<dyn DatabaseBackend> = Arc::new(
+        SqliteRepository::new(&database_settings)
+            .await
+            .expect("Failed to initialise test SQLite repository."),
+    );
+    let metadata = MetadataClient::with_base_urls(
+        metadata_stub.musicbrainz.uri(),
+        metadata_stub.cover_art.uri(),
+    );
+
+    let basicauth = configuration.basicauth.clone();
+    let application = Application::build(configuration, template_renderer, database, metadata)
         .await
         .expect("Failed to build application.");
     let application_port = application.port();
     drop(tokio::spawn(application.run_until_stopped()));
 
-    let client = reqwest::Client::builder()
+    use base64::Engine;
+    let encoded = base64::engine::general_purpose::STANDARD
+        .encode(format!("{}:{}", basicauth.username, basicauth.password));
+    let auth_header = format!("Basic {encoded}");
+
+    let api_client = reqwest::Client::builder()
+        .redirect(reqwest::redirect::Policy::none())
+        .default_headers(
+            std::iter::once((
+                reqwest::header::AUTHORIZATION,
+                reqwest::header::HeaderValue::from_str(&auth_header).unwrap(),
+            ))
+            .collect(),
+        )
+        .build()
+        .unwrap();
+
+    let unauthenticated_client = reqwest::Client::builder()
         .redirect(reqwest::redirect::Policy::none())
         .build()
         .unwrap();
@@ -116,6 +163,104 @@ async fn spawn_app_with(
     TestApp {
         address: format!("http://localhost:{}", application_port),
         port: application_port,
-        api_client: client,
+        api_client,
+        unauthenticated_client,
+        metadata_stub,
+        database_dir,
     }
+}
+
+// --- Server-sent events helpers ---
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct SseEvent {
+    pub event: Option<String>,
+    pub data: Vec<String>,
+}
+
+impl SseEvent {
+    pub fn dataline(&self, key: &str) -> Option<&str> {
+        self.data.iter().find_map(|line| {
+            line.strip_prefix(key)
+                .and_then(|rest| rest.strip_prefix(' '))
+        })
+    }
+}
+
+pub fn parse_sse(body: &str) -> Vec<SseEvent> {
+    let fresh = || SseEvent {
+        event: None,
+        data: Vec::new(),
+    };
+    let mut events = Vec::new();
+    let mut event = fresh();
+    for line in body.lines() {
+        if line.is_empty() {
+            if event.event.is_some() || !event.data.is_empty() {
+                events.push(std::mem::replace(&mut event, fresh()));
+            }
+            continue;
+        }
+        if let Some(name) = line.strip_prefix("event: ") {
+            assert!(
+                event.event.replace(name.to_owned()).is_none(),
+                "multiple event names without a blank-line separator:\n{body}"
+            );
+        } else if let Some(data) = line.strip_prefix("data: ") {
+            event.data.push(data.to_owned());
+        }
+    }
+    events
+}
+
+pub fn assert_sse_headers(response: &reqwest::Response) {
+    let content_type = response
+        .headers()
+        .get(reqwest::header::CONTENT_TYPE)
+        .expect("SSE response must carry a content-type")
+        .to_str()
+        .expect("content-type must be ASCII");
+    assert!(
+        content_type.split(';').next().unwrap().trim() == "text/event-stream",
+        "expected text/event-stream, got: {content_type}"
+    );
+
+    let cache_control = response
+        .headers()
+        .get(reqwest::header::CACHE_CONTROL)
+        .expect("SSE response must carry cache-control")
+        .to_str()
+        .expect("cache-control must be ASCII");
+    assert!(
+        cache_control
+            .split(',')
+            .any(|directive| directive.trim().eq_ignore_ascii_case("no-cache")),
+        "expected no-cache, got: {cache_control}"
+    );
+}
+
+pub async fn sse_body(response: reqwest::Response) -> String {
+    tokio::time::timeout(std::time::Duration::from_secs(10), response.text())
+        .await
+        .expect("the stream should end on its own within 10 seconds")
+        .expect("Failed to read the stream")
+}
+
+pub fn assert_sse_framing(body: &str, expected: usize) -> Vec<SseEvent> {
+    let normalized = body.replace("\r\n", "\n").replace('\r', "\n");
+    assert!(
+        normalized.ends_with("\n\n"),
+        "the final event must be terminated by a blank line:\n{body}"
+    );
+    let events = parse_sse(&normalized);
+    assert_eq!(
+        events.len(),
+        expected,
+        "expected {expected} blank-line-delimited events:\n{body}"
+    );
+    assert!(
+        events.iter().all(|e| e.event.is_some()),
+        "every event must name its type:\n{body}"
+    );
+    events
 }

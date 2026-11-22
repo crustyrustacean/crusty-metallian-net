@@ -1,2 +1,9 @@
 [application]
 host = "127.0.0.1"
+
+[cors]
+allowed_origins = [
+    "https://crusty-metallian.net",
+    "https://www.crusty-metallian.net",
+    "http://localhost:8080",
+]

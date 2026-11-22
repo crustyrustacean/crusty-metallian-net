@@ -22,3 +22,7 @@ primary_region = 'dfw'
   memory = '256mb'
   cpu_kind = 'shared'
   cpus = 1
+
+[mounts]
+  source = 'crusty_metallian_data'
+  destination = '/data'

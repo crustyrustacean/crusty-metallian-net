@@ -1,4 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
-    <p>Welcome!</p>
+<section class="home-panel">
+    <h1 class="page-title">{{ header }}</h1>
+    <p>Control panel and API backing <a href="https://crusty-metallian.net">crusty-metallian.net</a>.</p>
+    <p class="home-actions"><a class="button" href="/stats">Stats</a></p>
+</section>
 {% endblock content %}

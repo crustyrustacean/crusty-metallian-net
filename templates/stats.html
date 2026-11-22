@@ -14,7 +14,7 @@
        widget to `#artist-stats-list` and removes `#artist-stats-loading`. #}
     <div id="artist-stats-list"
          aria-busy="true"
-         data-init="@get('https://musicfeed.crusty-metallian.net/stats')">
+         data-init="@get('https://api.crusty-metallian.net/api/v1/stats')">
         <p id="artist-stats-loading" class="widget-loading">Loading artist stats&hellip;</p>
     </div>
 </section>

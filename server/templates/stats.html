@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="page-title">{{ header }}</h1>
+
+<section class="panel add-section" aria-labelledby="add-heading">
+    <h2 id="add-heading">What&rsquo;s Spinning?</h2>
+    <p class="section-intro">Enter an artist and album — cover art and release year are looked up automatically.</p>
+
+    <form id="rotation-form" data-on:submit__prevent="@post('/api/v1/rotation?view=table')">
+        <div class="field">
+            <label for="artist">Artist</label>
+            <input id="artist" type="text" data-bind:artist required autofocus />
+        </div>
+
+        <div class="field">
+            <label for="album">Album</label>
+            <input id="album" type="text" data-bind:album required />
+        </div>
+
+        <div class="field field-note">
+            <label for="note">Note <span class="optional">(optional)</span></label>
+            <input id="note" type="text" data-bind:note />
+        </div>
+
+        <button type="submit" class="submit">Add to Rotation</button>
+    </form>
+
+    <!-- A lookup failure does not prevent the entry from being saved. -->
+    <p id="metadata-status" class="metadata-status" role="status" data-text="$metadata_status"></p>
+</section>
+
+<section class="panel rotation-section" aria-labelledby="rotation-heading">
+    <h2 id="rotation-heading">Rotation Log</h2>
+
+    <table class="rotation-table" role="table">
+        <caption class="visually-hidden">Albums in rotation</caption>
+        <thead role="rowgroup">
+            <tr role="row">
+                <th scope="col" role="columnheader">Cover</th>
+                <th scope="col" role="columnheader">Artist</th>
+                <th scope="col" role="columnheader">Album</th>
+                <th scope="col" role="columnheader">Year</th>
+                <th scope="col" role="columnheader">Note</th>
+                <th scope="col" role="columnheader">Listened</th>
+            </tr>
+        </thead>
+        <tbody id="rotation-table-body" role="rowgroup">
+            {% for rotation_entry in rotation_entries %}{% include "rotation_row.html" %}{% endfor %}
+            <!-- The POST stream removes this placeholder after appending a row. -->
+            <tr id="rotation-loading" class="rotation-empty" role="row" {% if rotation_entries | length > 0 %}hidden{% endif %}>
+                <td colspan="6" role="cell">Nothing spinning yet. Add the first entry above.</td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+{% endblock content %}

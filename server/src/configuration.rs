@@ -6,6 +6,17 @@ use confik::{Configuration, EnvSource, FileSource};
 #[derive(Configuration, Clone, Debug)]
 pub struct Settings {
     pub application: ApplicationSettings,
+    pub metadata: MetadataSettings,
+    pub basicauth: BasicAuthSettings,
+    pub database: DatabaseSettings,
+    pub healing: HealingSettings,
+    pub cors: CorsSettings,
+}
+
+#[derive(Configuration, Clone, Debug)]
+pub struct BasicAuthSettings {
+    pub username: String,
+    pub password: String,
 }
 
 #[derive(Configuration, Clone, Debug)]
@@ -14,6 +25,35 @@ pub struct ApplicationSettings {
     pub host: String,
     pub static_dir: String,
     pub templates_glob: String,
+}
+
+#[derive(Configuration, Clone, Debug)]
+pub struct MetadataSettings {
+    /// Overridable so a test can point both services at a local stub.
+    pub musicbrainz_base_url: String,
+    pub cover_art_base_url: String,
+}
+
+#[derive(Configuration, Clone, Debug)]
+pub struct DatabaseSettings {
+    pub path: String,
+    pub max_connections: Option<u32>,
+}
+
+/// The background healer's tuning. `enabled` can be flipped from the
+/// environment (`APP_HEALING__ENABLED=false`) without a redeploy.
+#[derive(Configuration, Clone, Debug)]
+pub struct HealingSettings {
+    pub enabled: bool,
+    pub interval_secs: u64,
+    pub max_attempts: u32,
+    pub per_pass: u32,
+}
+
+/// Origins allowed to read the API cross-origin (the blog widgets).
+#[derive(Configuration, Clone, Debug)]
+pub struct CorsSettings {
+    pub allowed_origins: Vec<String>,
 }
 
 pub fn get_configuration() -> Result<Settings, confik::Error> {
@@ -87,6 +127,27 @@ mod tests {
             host = "0.0.0.0"
             static_dir = "static"
             templates_glob = "templates/**/*.html"
+
+            [metadata]
+            musicbrainz_base_url = "https://musicbrainz.org/ws/2"
+            cover_art_base_url = "https://coverartarchive.org"
+
+            [basicauth]
+            username = "test"
+            password = "test"
+
+            [database]
+            path = "crusty-metallian.db"
+            max_connections = 5
+
+            [healing]
+            enabled = true
+            interval_secs = 900
+            max_attempts = 3
+            per_pass = 3
+
+            [cors]
+            allowed_origins = ["https://crusty-metallian.net"]
         "#;
         let local = r#"
             [application]
@@ -103,6 +164,13 @@ mod tests {
         assert_eq!(settings.application.host, "127.0.0.1");
         assert_eq!(settings.application.static_dir, "static");
         assert_eq!(settings.application.templates_glob, "templates/**/*.html");
+        assert_eq!(settings.database.path, "crusty-metallian.db");
+        assert_eq!(settings.database.max_connections, Some(5));
+        assert!(settings.healing.enabled);
+        assert_eq!(
+            settings.cors.allowed_origins,
+            vec!["https://crusty-metallian.net"]
+        );
     }
 
     #[test]
@@ -123,5 +191,6 @@ mod tests {
         let settings = result.expect("Configuration should load with APP_ env overrides");
         assert_eq!(settings.application.port, 5001);
         assert_eq!(settings.application.host, "0.0.0.0");
+        assert_eq!(settings.database.path, "/data/crusty-metallian.db");
     }
 }

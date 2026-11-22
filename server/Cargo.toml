@@ -1,6 +1,6 @@
 [package]
 name = "server"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
 authors = ["Jeffery D. Mitchell", "<crusty.rustacean@gmail.com>"]
 description = "The server powering crusty-metallian.net"
@@ -14,24 +14,35 @@ name = "server"
 path = "src/bin/main.rs"
 
 [dependencies]
+actix-cors = "0.7"
 actix-files = "0.7.5"
+actix-sse = "0.3"
 actix-web = { version = "4", default-features = false }
 anyhow = "1"
+async-trait = "0.1"
+base64 = "0.23"
 confik = "0.15.14"
 datastar = { version = "0.4.2", features = ["actix-web"] }
+jiff = { version = "1", features = ["serde"] }
+reqwest = { version = "0.13", features = ["json"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+sqlx = { version = "0.9", features = ["runtime-tokio", "sqlite"] }
+subtle = "2"
+tera = { version = "2.4.0", features = ["fast", "glob_fs"] }
 thiserror = "2"
-tera = { version = "2.4.0", features = [ "fast", "glob_fs" ] }
-tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
+tokio = { version = "1", features = ["macros", "rt-multi-thread", "signal", "time"] }
+tokio-stream = "0.1"
 tracing = "0.1"
 tracing-actix-web = "0.7"
-tracing-log = "0.2"
 tracing-bunyan-formatter = "0.3"
+tracing-log = "0.2"
 tracing-subscriber = { version = "0.3", features = ["registry", "env-filter"] }
+uuid = { version = "1", features = ["v4", "serde"] }
 
 [dev-dependencies]
-reqwest = { version = "0.13", features = ["json"] }
+tempfile = "3"
+wiremock = "0.6.5"
 
 [profile.release]
 strip = true

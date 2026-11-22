@@ -1,16 +1,8 @@
-@layer reset, tokens, base, layout, components;
+/* ===== CSS Layers for cascade control ===== */
+@layer reset, theme, base, components;
 
-@layer reset {
-    *,
-    *::before,
-    *::after {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-    }
-}
-
-@layer tokens {
+/* ===== Theme Layer — mirrored from frontend styles/main.scss ===== */
+@layer theme {
     @font-face {
         font-family: "Oswald";
         font-style: normal;
@@ -25,71 +17,99 @@
     :root {
         color-scheme: dark;
 
-        /* Dark theme palette — mirrored from frontend styles/main.scss */
-        --color-text: oklch(90% 0 0);
-        --color-text-light: oklch(65% 0 0);
-        --color-text-lighter: oklch(65% 0 0);
-        --color-text-muted: oklch(65% 0 0);
-        --color-accent: oklch(65% 0.17 15);
-        --color-accent-deep: oklch(45% 0.19 15);
-        --color-accent-subtle: oklch(45% 0.19 15 / 0.25);
-        --color-link: var(--color-accent);
-        --color-link-hover: color-mix(in oklch, var(--color-accent), white 20%);
-        --color-bg: oklch(10% 0 0);
-        --color-bg-soft: oklch(15% 0 0);
-        --color-border: oklch(25% 0 0);
-        --color-border-light: oklch(20% 0 0);
+        /* Cardinal red + near-black palette from crusty-metallian.net */
+        --accent: oklch(65% 0.17 15);
+        --accent-deep: oklch(45% 0.19 15);
+        --bg-dark: oklch(10% 0 0);
+        --bg-card: oklch(15% 0 0);
+        --bg-surface: oklch(12% 0 0);
+        --bg-hover: oklch(13% 0 0);
+        --text-primary: oklch(90% 0 0);
+        --text-muted: oklch(65% 0 0);
+        --border: oklch(25% 0 0);
+
+        /* Spacing scale */
+        --space-xs: 0.25rem;
+        --space-sm: 0.5rem;
+        --space-md: 1rem;
+        --space-lg: 2rem;
+        --space-xl: 3rem;
 
         /* Typography */
         --font-body: system-ui, sans-serif;
         --font-heading: "Oswald", sans-serif;
         --font-mono: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace;
+        --line-height: 1.6;
 
-        /* Layout & shape */
-        --max-width: 720px;
-        --gutter: 1.5rem;
-        --radius-sm: 4px;
-        --radius-md: 6px;
-    }
-
-    @media (width <= 768px) {
-        :root {
-            --gutter: 1rem;
-        }
-    }
-
-    @media (width <= 480px) {
-        :root {
-            --gutter: 0.75rem;
-        }
+        /* Layout */
+        --content-width: 64rem;
+        --border-width: 2px;
     }
 }
 
-@layer base {
-    html {
-        font-size: 18px;
-        scroll-behavior: smooth;
-        block-size: 100%;
+/* ===== Reset Layer ===== */
+@layer reset {
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    }
 
-        @media (width <= 768px) {
-            font-size: 16px;
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            scroll-behavior: auto;
-        }
+    * {
+        margin: 0;
     }
 
     body {
-        min-block-size: 100%;
+        line-height: var(--line-height);
+        -webkit-font-smoothing: antialiased;
+    }
+
+    img {
+        display: block;
+        max-inline-size: 100%;
+        block-size: auto;
+    }
+
+    input,
+    button,
+    textarea,
+    select {
+        font: inherit;
+    }
+
+    p,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        overflow-wrap: break-word;
+    }
+
+    p {
+        text-wrap: pretty;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        text-wrap: balance;
+    }
+}
+
+/* ===== Base Layer ===== */
+@layer base {
+    body {
+        min-block-size: 100dvh;
         display: flex;
         flex-direction: column;
         font-family: var(--font-body);
-        line-height: 1.7;
-        color: var(--color-text);
-        background-color: var(--color-bg);
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
+        background-color: var(--bg-dark);
+        color: var(--text-primary);
     }
 
     h1,
@@ -102,218 +122,479 @@
         text-transform: uppercase;
         letter-spacing: 0.05em;
         line-height: 1.2;
-        color: var(--color-text);
-        text-wrap: balance;
     }
 
-    ::selection {
-        background: var(--color-accent-deep);
-        color: var(--color-text);
-    }
-
-    p {
-        text-wrap: pretty;
-        overflow-wrap: break-word;
-    }
-
-    /* Inline links are underlined so colour is not the only cue (WCAG 1.4.1 / 1.4.3). */
     a {
-        color: var(--color-link);
-        text-decoration: underline;
-        text-underline-offset: 0.15em;
-        text-decoration-thickness: 1px;
-        text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
-        transition: color 0.15s ease, text-decoration-color 0.15s ease;
+        color: var(--accent);
+        text-decoration: none;
+        transition: color 0.2s;
 
         &:hover {
-            color: var(--color-link-hover);
-            text-decoration-color: currentColor;
+            color: color-mix(in oklch, var(--accent), white 20%);
+            text-decoration: underline;
         }
 
         &:focus-visible {
-            outline: 2px solid var(--color-accent);
+            outline: 2px solid var(--accent);
             outline-offset: 2px;
-            border-radius: 2px;
         }
     }
 
-    code {
-        font-family: var(--font-mono);
-        font-size: 0.875em;
-        background-color: var(--color-bg-soft);
-        padding: 0.15em 0.35em;
-        border-radius: 3px;
-    }
-
-    pre {
-        overflow-x: auto;
-        background-color: var(--color-bg-soft);
-        padding: 1rem;
-        border-radius: var(--radius-md);
-        margin-block-end: 1.25em;
-
-        & code {
-            background: none;
-            padding: 0;
-            border-radius: 0;
-            font-size: 0.85rem;
-        }
-    }
-
-    hr {
-        border: none;
-        border-block-start: 1px solid var(--color-border);
-        margin-block: 2em;
-    }
-
-    table {
-        inline-size: 100%;
-        border-collapse: collapse;
-        margin-block-end: 1.25em;
-
-        & th,
-        & td {
-            border: 1px solid var(--color-border);
-            padding: 0.5em 0.75em;
-            text-align: start;
-        }
-
-        & th {
-            background-color: var(--color-bg-soft);
-            font-family: var(--font-heading);
-            font-weight: 600;
-        }
+    ::selection {
+        background: var(--accent-deep);
+        color: var(--text-primary);
     }
 
     input,
     textarea,
     select {
-        font: inherit;
-        font-family: var(--font-heading);
-        color: var(--color-text);
-        background-color: var(--color-bg-soft);
-        border: 1px solid var(--color-border);
-        border-radius: var(--radius-sm);
-        padding: 0.55rem 0.75rem;
+        color: var(--text-primary);
+        background-color: var(--bg-dark);
+        border: 1px solid var(--border);
+        border-radius: 2px;
+        padding: 0.5rem 0.75rem;
 
         &::placeholder {
-            color: var(--color-text-lighter);
+            color: var(--text-muted);
         }
 
         &:focus-visible {
-            outline: 2px solid var(--color-accent);
+            outline: 2px solid var(--accent);
             outline-offset: 2px;
         }
     }
 
     button {
-        font: inherit;
         font-family: var(--font-heading);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-size: 0.85rem;
         font-weight: 600;
-        color: var(--color-text);
-        background-color: var(--color-bg-soft);
-        border: 1px solid var(--color-border);
-        border-radius: var(--radius-sm);
-        padding: 0.5rem 0.9rem;
+        color: var(--text-primary);
+        background-color: var(--accent-deep);
+        border: 1px solid var(--accent);
+        border-radius: 2px;
+        padding: 0.55rem 1.1rem;
         cursor: pointer;
-        transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
+        transition: color 0.2s, border-color 0.2s, background-color 0.2s;
 
         &:hover {
-            border-color: var(--color-accent);
-            color: var(--color-link);
-            background-color: var(--color-accent-subtle);
+            background-color: var(--accent);
+            color: var(--bg-dark);
         }
 
         &:focus-visible {
-            outline: 2px solid var(--color-accent);
+            outline: 2px solid var(--accent);
             outline-offset: 2px;
         }
     }
 }
 
-@layer layout {
-    header {
-        inline-size: 100%;
-        max-inline-size: var(--max-width);
-        margin-inline: auto;
-        padding-block: 2rem 0;
-        padding-inline: var(--gutter);
+/* ===== Components Layer ===== */
+@layer components {
+    [hidden] {
+        display: none !important;
+    }
 
-        & h1 {
-            font-size: 1.5rem;
+    .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+    }
+
+    /* Site Header — matches crusty-metallian.net */
+    #header {
+        text-align: center;
+        padding: var(--space-lg) var(--space-md);
+        border-block-end: var(--border-width) solid var(--border);
+
+        & .site-title {
+            font-family: var(--font-heading);
+            font-size: clamp(1.75rem, 5vw, 2.5rem);
             font-weight: 700;
-            letter-spacing: -0.02em;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            line-height: 1.2;
 
             & a {
-                color: var(--color-text);
+                color: var(--text-primary);
                 text-decoration: none;
 
                 &:hover {
-                    color: var(--color-link);
+                    color: var(--accent);
                 }
             }
         }
 
-        & h2 {
-            font-size: 0.95rem;
-            font-weight: 400;
-            color: var(--color-text-light);
-            margin-block-start: 0.35rem;
+        & .site-subtitle {
+            margin-block-start: var(--space-xs);
+            font-size: 0.9rem;
+            color: var(--text-muted);
         }
-    }
 
-    main {
-        flex: 1;
-        inline-size: 100%;
-        max-inline-size: var(--max-width);
-        margin-inline: auto;
-        padding-block: 1.5rem;
-        padding-inline: var(--gutter);
+        & nav {
+            margin-block-start: var(--space-md);
 
-        & > p + p {
-            margin-block-start: 1em;
-        }
-    }
+            & ul {
+                list-style: none;
+                padding: 0;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: var(--space-sm) var(--space-lg);
+            }
 
-    footer {
-        inline-size: 100%;
-        max-inline-size: var(--max-width);
-        margin-inline: auto;
-        padding-block: 1.5rem;
-        padding-inline: var(--gutter);
-        border-block-start: 1px solid var(--color-border-light);
-        font-family: var(--font-heading);
-        font-size: 0.85rem;
-        color: var(--color-text-lighter);
+            & a {
+                font-family: var(--font-heading);
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                font-size: 0.9rem;
+                color: var(--text-muted);
 
-        & a {
-            color: var(--color-text-light);
-
-            &:hover {
-                color: var(--color-link);
+                &:hover {
+                    color: var(--accent);
+                    text-decoration: none;
+                }
             }
         }
     }
-}
 
-@layer components {
+    /* Main Content */
+    #main {
+        flex: 1;
+        inline-size: min(var(--content-width), 100% - var(--space-lg));
+        margin-inline: auto;
+        padding-block: var(--space-lg);
+
+        & > section {
+            margin-block-end: var(--space-xl);
+        }
+    }
+
+    .page-title {
+        margin-block-end: var(--space-lg);
+        font-size: clamp(1.5rem, 4vw, 2rem);
+        border-block-end: 2px solid var(--accent);
+        padding-block-end: var(--space-sm);
+    }
+
+    /* Home Panel & Action Button */
+    .home-panel {
+        & p + p {
+            margin-block-start: var(--space-md);
+        }
+
+        & a:not(.button) {
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+    }
+
+    .button {
+        display: inline-block;
+        font-family: var(--font-heading);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-size: 0.9rem;
+        font-weight: 600;
+        padding: var(--space-sm) var(--space-md);
+        color: var(--text-primary);
+        background-color: var(--bg-card);
+        border: 1px solid var(--border);
+        border-inline-start: 3px solid var(--accent);
+        border-radius: 2px;
+        transition: color 0.2s, border-color 0.2s, background-color 0.2s;
+
+        &:hover {
+            color: var(--accent);
+            border-color: var(--accent);
+            background-color: var(--bg-hover);
+            text-decoration: none;
+        }
+    }
+
+    /* Card Panels — mirrors article cards in crusty-metallian.net */
+    .panel {
+        background: var(--bg-card);
+        padding: var(--space-lg);
+        border-inline-start: 3px solid var(--accent);
+
+        & h2 {
+            font-size: 1.35rem;
+            margin-block-end: var(--space-md);
+            padding-block-end: var(--space-sm);
+            border-block-end: 1px solid var(--border);
+        }
+    }
+
+    .section-intro {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        margin-block-end: var(--space-md);
+    }
+
+    /* Entry Form */
+    #rotation-form {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.15fr) auto;
+        align-items: end;
+        gap: var(--space-md);
+    }
+
+    .field {
+        display: flex;
+        min-inline-size: 0;
+        flex-direction: column;
+        gap: var(--space-xs);
+
+        & label {
+            font-family: var(--font-heading);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        & input {
+            inline-size: 100%;
+            min-inline-size: 0;
+            min-block-size: 2.5rem;
+        }
+    }
+
+    .optional {
+        text-transform: none;
+        letter-spacing: normal;
+        font-family: var(--font-body);
+        font-size: 0.8rem;
+        color: var(--text-muted);
+    }
+
+    .submit {
+        min-block-size: 2.5rem;
+    }
+
+    .metadata-status {
+        margin-block-start: var(--space-md);
+        padding: var(--space-sm) var(--space-md);
+        background: var(--bg-surface);
+        border: 1px solid var(--accent);
+        color: var(--text-primary);
+        font-size: 0.9rem;
+
+        &:empty {
+            display: none;
+        }
+    }
+
+    /* Rotation Table — mirrors prose table styling in crusty-metallian.net */
+    .rotation-table {
+        inline-size: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+        font-size: 0.9rem;
+
+        & th,
+        & td {
+            padding: var(--space-sm) var(--space-md);
+            text-align: start;
+            border-block-end: 1px solid var(--border);
+            overflow-wrap: anywhere;
+            vertical-align: middle;
+        }
+
+        & th {
+            font-family: var(--font-heading);
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            border-block-end: 2px solid var(--border);
+            background: var(--bg-surface);
+        }
+
+        & tbody tr:hover td {
+            background: var(--bg-hover);
+        }
+
+        & th:nth-child(1) { inline-size: 5.5rem; }
+        & th:nth-child(2) { inline-size: 18%; }
+        & th:nth-child(3) { inline-size: 19%; }
+        & th:nth-child(4) { inline-size: 5.5rem; }
+        & th:nth-child(6) { inline-size: 7.5rem; }
+    }
+
+    .rotation-artist-cell {
+        color: var(--text-primary);
+        font-weight: 600;
+    }
+
+    .rotation-year-cell,
+    .rotation-listened-cell,
+    .missing-value {
+        color: var(--text-muted);
+    }
+
+    .rotation-cover,
+    .cover-placeholder {
+        inline-size: 4rem;
+        block-size: 4rem;
+        border-radius: 4px;
+    }
+
+    .rotation-cover {
+        object-fit: cover;
+    }
+
+    .cover-placeholder {
+        display: grid;
+        place-items: center;
+        padding: var(--space-xs);
+        color: var(--text-muted);
+        background: var(--bg-surface);
+        border: 1px solid var(--border);
+        font-size: 0.7rem;
+        text-align: center;
+    }
+
+    .cell-label {
+        display: none;
+    }
+
+    .rotation-empty td {
+        padding: var(--space-lg) var(--space-md);
+        color: var(--text-muted);
+        text-align: center;
+    }
+
+    /* Error Page */
     .error-page {
         text-align: center;
-        padding-block: 4rem;
+        padding-block: var(--space-xl);
 
         & h1,
         & h3 {
-            font-family: var(--font-heading);
             font-size: 5rem;
             font-weight: 700;
             line-height: 1;
-            color: var(--color-border);
+            color: var(--accent);
             font-variant-numeric: tabular-nums;
-            margin-block-end: 1rem;
+            margin-block-end: var(--space-md);
         }
 
         & p {
-            color: var(--color-text-light);
+            color: var(--text-muted);
+        }
+    }
+
+    /* Site Footer — matches crusty-metallian.net */
+    #footer {
+        margin-block-start: auto;
+        text-align: center;
+        padding: var(--space-md);
+        border-block-start: var(--border-width) solid var(--border);
+        color: var(--text-muted);
+        font-size: 0.9rem;
+
+        & a {
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+    }
+
+    /* Responsive Breakpoints */
+    @media (width <= 52rem) {
+        #rotation-form {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @media (width <= 42rem) {
+        .panel {
+            padding: var(--space-md);
+        }
+
+        .rotation-table thead {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+        }
+
+        .rotation-table,
+        .rotation-table tbody {
+            display: block;
+            inline-size: 100%;
+        }
+
+        .rotation-row {
+            display: grid;
+            grid-template-columns: 4rem minmax(0, 1fr);
+            gap: var(--space-sm) var(--space-md);
+            margin-block-end: var(--space-md);
+            padding: var(--space-md);
+            background: var(--bg-surface);
+            border-inline-start: 3px solid var(--accent);
+        }
+
+        .rotation-table .rotation-row td {
+            min-inline-size: 0;
+            padding: 0;
+            border: 0;
+        }
+
+        .rotation-cover-cell {
+            grid-column: 1;
+            grid-row: 1 / span 2;
+        }
+
+        .rotation-artist-cell,
+        .rotation-album-cell {
+            grid-column: 2;
+        }
+
+        .rotation-year-cell,
+        .rotation-note-cell,
+        .rotation-listened-cell {
+            grid-column: 1 / -1;
+        }
+
+        .cell-label {
+            display: block;
+            margin-block-end: 0.15rem;
+            color: var(--text-muted);
+            font-family: var(--font-heading);
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .rotation-cover-cell .cell-label {
+            display: none;
+        }
+
+        .rotation-empty,
+        .rotation-empty td {
+            display: block;
+        }
+    }
+
+    @media (width <= 30rem) {
+        #rotation-form {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .submit {
+            inline-size: 100%;
         }
     }
 }

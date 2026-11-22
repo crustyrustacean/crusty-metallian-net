@@ -81,6 +81,7 @@ async fn index_page_returns_200_ok_and_renders_html_document() {
     assert!(body.contains("<!DOCTYPE html>"));
     assert!(body.contains("<html"));
     assert!(body.contains("</html>"));
+    assert!(body.contains(r#"href="/stats""#));
 }
 
 #[tokio::test]

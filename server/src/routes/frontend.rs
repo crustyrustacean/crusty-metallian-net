@@ -3,11 +3,14 @@
 use crate::template::TemplateRenderer;
 use actix_web::{HttpResponse, web::Data};
 use serde::Serialize;
+
 // module declarations
 pub mod index;
+pub mod stats;
 
 // re-exports
 pub use index::*;
+pub use stats::*;
 
 #[derive(Serialize)]
 struct NotFoundContext {
@@ -31,6 +34,6 @@ pub async fn not_found(
     let json_ctx = serde_json::to_value(&not_found_context)?;
     let html = templates.render("error.html", &json_ctx)?;
     Ok(actix_web::HttpResponse::NotFound()
-        .content_type("text/html")
+        .content_type("text/html; charset=utf-8")
         .body(html))
 }

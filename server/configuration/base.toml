@@ -3,3 +3,27 @@ port = 8000
 host = "0.0.0.0"
 static_dir = "static"
 templates_glob = "templates/**/*.html"
+
+[metadata]
+musicbrainz_base_url = "https://musicbrainz.org/ws/2"
+cover_art_base_url = "https://coverartarchive.org"
+
+[basicauth]
+username = "test"
+password = "test"
+
+[database]
+path = "crusty-metallian.db"
+max_connections = 5
+
+[healing]
+enabled = true
+interval_secs = 900
+max_attempts = 3
+per_pass = 3
+
+[cors]
+allowed_origins = [
+    "https://crusty-metallian.net",
+    "https://www.crusty-metallian.net",
+]
