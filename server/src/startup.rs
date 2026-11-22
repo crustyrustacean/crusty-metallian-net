@@ -2,7 +2,7 @@
 
 // dependencies
 use crate::auth;
-use crate::configuration::{AdminSettings, CorsSettings, Settings};
+use crate::configuration::Settings;
 use crate::database::DatabaseBackend;
 use crate::metadata::MetadataClient;
 use crate::routes::{api, frontend};
@@ -10,12 +10,11 @@ use crate::services::PhotoOperations;
 use crate::storage::StorageBackend;
 use crate::telemetry::request_id;
 use crate::template::TemplateRenderer;
-use crate::utils::shutdown_signal;
+use crate::utils::session_key_from_password;
 use actix_cors::Cors;
 use actix_files::Files;
 use actix_identity::IdentityMiddleware;
 use actix_session::{SessionMiddleware, storage::CookieSessionStore};
-use actix_web::cookie::Key;
 use actix_web::dev::Server;
 use actix_web::http::header::{ACCEPT, CONTENT_TYPE, HeaderName, HeaderValue};
 use actix_web::{App, HttpResponse, HttpServer, middleware, web, web::Data};
@@ -25,12 +24,19 @@ use tracing_actix_web::TracingLogger;
 
 const DATASTAR_REQUEST: HeaderName = HeaderName::from_static("datastar-request");
 
-pub struct Application {
-    port: u16,
-    server: Server,
+#[derive(Clone)]
+struct AppDeps {
+    template_renderer: Arc<dyn TemplateRenderer>,
     database: Arc<dyn DatabaseBackend>,
     storage: Arc<dyn StorageBackend>,
     operations: Data<PhotoOperations>,
+    metadata: MetadataClient,
+}
+
+pub struct Application {
+    port: u16,
+    server: Server,
+    deps: AppDeps,
 }
 
 impl Application {
@@ -48,44 +54,24 @@ impl Application {
         let listener = TcpListener::bind(address)?;
         let port = listener.local_addr()?.port();
 
-        // Derive a 64-byte session signing key from the admin password.
-        let seed = if configuration.admin.password.is_empty() {
-            b"crusty-metallian-dev-session-key".as_slice()
-        } else {
-            configuration.admin.password.as_bytes()
+        let deps = AppDeps {
+            template_renderer,
+            database,
+            storage,
+            operations: Data::new(PhotoOperations::default()),
+            metadata,
         };
-        let key_bytes: Vec<u8> = seed.iter().cycle().take(64).copied().collect();
-        let session_key = Key::from(&key_bytes);
-
-        let operations = Data::new(PhotoOperations::default());
-        if let Err(error) = operations
-            .recover_incomplete(database.as_ref(), storage.as_ref())
+        if let Err(error) = deps
+            .operations
+            .recover_incomplete(deps.database.as_ref(), deps.storage.as_ref())
             .await
         {
             tracing::warn!(error = ?error, "startup photo recovery failed; will retry");
         }
 
-        let server = run(
-            listener,
-            template_renderer,
-            database.clone(),
-            storage.clone(),
-            operations.clone(),
-            metadata,
-            configuration.admin,
-            session_key,
-            configuration.application.static_dir,
-            configuration.cors,
-        )
-        .await?;
+        let server = run(listener, configuration, deps.clone()).await?;
 
-        Ok(Self {
-            port,
-            server,
-            database,
-            storage,
-            operations,
-        })
+        Ok(Self { port, server, deps })
     }
 
     pub fn port(&self) -> u16 {
@@ -93,61 +79,43 @@ impl Application {
     }
 
     pub async fn run_until_stopped(self) -> Result<(), std::io::Error> {
-        let Self {
-            server,
-            database,
-            storage,
-            operations,
-            ..
-        } = self;
-        let handle = server.handle();
+        let Self { server, deps, .. } = self;
         let mut interval = tokio::time::interval(std::time::Duration::from_secs(300));
         interval.tick().await; // Startup already performed the first pass.
 
         tokio::pin!(server);
         loop {
             tokio::select! {
-                result = &mut server => {
-                    tracing::info!("shutdown complete");
-                    return result;
-                }
+                result = &mut server => return result,
                 _ = interval.tick() => {
-                    if let Err(error) = operations
-                        .recover_incomplete(database.as_ref(), storage.as_ref())
+                    if let Err(error) = deps
+                        .operations
+                        .recover_incomplete(deps.database.as_ref(), deps.storage.as_ref())
                         .await
                     {
                         tracing::warn!(error = ?error, "photo recovery failed; will retry");
                     }
-                }
-                _ = shutdown_signal() => {
-                    handle.stop(true).await;
-                    tracing::info!("shutdown complete");
-                    return Ok(());
                 }
             }
         }
     }
 }
 
-#[allow(clippy::too_many_arguments)]
 async fn run(
     listener: TcpListener,
-    template_renderer: Arc<dyn TemplateRenderer>,
-    database: Arc<dyn DatabaseBackend>,
-    storage: Arc<dyn StorageBackend>,
-    operations: Data<PhotoOperations>,
-    metadata: MetadataClient,
-    admin: AdminSettings,
-    session_key: Key,
-    static_dir: String,
-    cors_settings: CorsSettings,
+    configuration: Settings,
+    deps: AppDeps,
 ) -> Result<Server, anyhow::Error> {
-    let template_renderer = Data::from(template_renderer);
-    let database = Data::new(database);
-    let storage = Data::new(storage);
-    let metadata = Data::new(metadata);
-    let admin = Data::new(admin);
-    let cors_origins = cors_settings
+    let session_key = session_key_from_password(&configuration.admin.password);
+    let template_renderer = Data::from(deps.template_renderer);
+    let database = Data::new(deps.database);
+    let storage = Data::new(deps.storage);
+    let operations = deps.operations;
+    let metadata = Data::new(deps.metadata);
+    let admin = Data::new(configuration.admin);
+    let static_dir = configuration.application.static_dir;
+    let cors_origins = configuration
+        .cors
         .allowed_origins
         .iter()
         .map(|origin| {
