@@ -1,11 +1,13 @@
 // src/routes/api/rotation.rs
 
+use crate::auth::require_api_login;
 use crate::database::{DatabaseBackend, DatabaseError};
 use crate::domain::{NewRotationEntry, RotationEntry};
 use crate::metadata::{AlbumQuery, MetadataClient};
 use crate::routes::sse::datastar_sse;
 use crate::template::{TemplateError, TemplateRenderer};
 use crate::utils::{compact_html, error_chain_fmt};
+use actix_identity::Identity;
 use actix_web::{HttpResponse, Responder, ResponseError, http::StatusCode, web};
 use datastar::actix_web::ReadSignals;
 use datastar::prelude::*;
@@ -93,7 +95,9 @@ pub async fn post_rotation_entry_ds(
     metadata: web::Data<MetadataClient>,
     view: web::Query<RotationView>,
     ReadSignals(raw_rotation_entry): ReadSignals<RawRotationEntry>,
-) -> Result<impl Responder, RotationEntryError> {
+    identity: Option<Identity>,
+) -> Result<impl Responder, actix_web::Error> {
+    require_api_login(&identity)?;
     // Look the album up before anything else. This never blocks the save: a
     // miss and a failure both come back as empty metadata, and the user is told
     // which happened via the status signal below.
@@ -111,7 +115,10 @@ pub async fn post_rotation_entry_ds(
         year: metadata.year,
         note: (!raw_rotation_entry.note.is_empty()).then_some(raw_rotation_entry.note),
     };
-    let entry = database.insert(new_entry).await?;
+    let entry = database
+        .insert(new_entry)
+        .await
+        .map_err(RotationEntryError::Database)?;
 
     // The form requests a table row; the default remains the public widget
     // response.

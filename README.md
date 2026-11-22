@@ -43,7 +43,7 @@ The repository is organized as a monorepo with two independently deployed parts:
 ### How It Works
 
 * **Generator:** [Taxus](https://github.com/crustyrustacean/taxus) reads Markdown from `content/`, templates from `templates/`, SCSS from `styles/`, static files from `static/`, and TypeScript from `scripts/`, outputting the built site to `dist/` (configured in `site.toml`, with responsive WebP image variants at 480–1600px).
-* **Live Widgets & External Services:** Uses [Datastar](https://data-star.dev) to stream the current rotation (`https://api.crusty-metallian.net/api/v1/rotation`) on the home page and artist spin stats (`https://api.crusty-metallian.net/api/v1/stats`) on `/stats/`. `scripts/main.ts` manages rotation widget deduplication/offline fallback and the metal trivia widget. Photo galleries link to `https://metallian-photos.fly.dev/galleries`.
+* **Live Widgets & External Services:** Uses [Datastar](https://data-star.dev) to stream the current rotation (`https://api.crusty-metallian.net/api/v1/rotation`) on the home page and artist spin stats (`https://api.crusty-metallian.net/api/v1/stats`) on `/stats/`. `scripts/main.ts` manages rotation widget deduplication/offline fallback and the metal trivia widget. Photo galleries link to `https://api.crusty-metallian.net/galleries`.
 * **Styling & Typography:** Dark theme with cardinal-red OKLCH accents, CSS `@layer` cascade control, and self-hosted Oswald headings (`static/fonts/oswald-latin.woff2`).
 * **Feeds, SEO & Analytics:** Generates an RSS feed at `/feed.xml`, emits Open Graph/Twitter metadata and JSON-LD structured data, and uses Plausible for privacy-friendly analytics.
 
@@ -67,12 +67,9 @@ The generated site is written to `dist/`.
 
 * **Stack:** Rust (edition 2024) using `actix-web`, `actix-files`, `tera`, `datastar`, `confik`, and structured logging via `tracing` + `tracing-bunyan-formatter`.
 * **Routes:**
-  * `GET /` — Renders the server home page (`templates/index.html`, Basic Auth).
-  * `GET /stats` — Rotation entry form and log table (`templates/stats.html`, Basic Auth).
-  * `GET /api/v1/health_check` — Health check endpoint (also used by Fly.io HTTP checks).
-  * `GET /api/v1/rotation` — Streams a random rotation entry as Datastar SSE patches.
-  * `POST /api/v1/rotation` — Adds a rotation entry with MusicBrainz/Cover Art Archive lookup (Basic Auth, `?view=table` for the control panel).
-  * `GET /api/v1/stats` — Streams the top artist spin leaderboard as Datastar SSE patches.
+  * **Public HTML:** `GET /galleries`, `GET /g/{slug}`, `GET /login`, `POST /login`, `GET /logout`.
+  * **Admin HTML (cookie-session auth):** `GET /` (control panel), `GET /stats` (rotation form & log), `GET /gallery` (manage photos), `GET`/`POST /upload` (HEIC→JPEG upload with EXIF extraction), `GET /gallery/{id}/edit`, `PUT /gallery/{id}`, `GET /gallery/{id}/cancel`, `DELETE /gallery/{id}`.
+  * **API (`/api/v1`):** `GET /health_check`, `GET`/`POST /rotation`, `GET /stats`, `GET /galleries`, `POST /photos`, `GET`/`PUT`/`DELETE /photos/{id}`, `GET /photos/{id}/image`.
   * `GET /static/*` — Serves static assets from `server/static/` without directory listing (missing assets return a non-HTML `404`).
   * Fallback — Unknown routes render the HTML `404` error page (`templates/error.html`).
 * **Styling:** `server/static/screen.css` mirrors the frontend's dark/cardinal-red OKLCH palette, Oswald/system-ui typography, and layout using native modern CSS (`@layer`, CSS nesting, logical properties, `color-scheme: dark`).

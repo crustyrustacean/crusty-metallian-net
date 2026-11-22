@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="flash-message"
+     data-signals="{flash: new URLSearchParams(location.search).get('status') === 'success'}"
+     data-show="$flash"
+     data-on:click="$flash = false, history.replaceState({}, '', '/gallery')"
+     data-effect="$flash ? setTimeout(() => { $flash = false; history.replaceState({}, '', '/gallery') }, 3000) : null">
+    Photo uploaded successfully!
+</div>
+
+<h1 class="page-title">Manage Gallery</h1>
+
+{% if photos %}
+<ul class="gallery-grid">
+    {% for photo in photos %}
+    <li id="photo-{{ photo.id }}">
+        <img src="/api/v1/photos/{{ photo.id }}/image" alt="{{ photo.band }} at {{ photo.venue }}" width="400" loading="lazy">
+        <div id="caption-{{ photo.id }}">
+            <p>{{ loop.index }}. {{ photo.band }} &mdash; {{ photo.tour }} &mdash; {{ photo.venue }}</p>
+        </div>
+        <div class="card-actions">
+            <button data-on:click="@get('/gallery/{{ photo.id }}/edit')">Edit</button>
+            <button data-on:click="@delete('/gallery/{{ photo.id }}')">Delete</button>
+        </div>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No photos yet. <a href="/upload">Upload one.</a></p>
+{% endif %}
+{% endblock content %}

@@ -7,6 +7,7 @@ mod health_check;
 mod helpers;
 mod index;
 mod metadata_stub;
+mod photos;
 mod rotation;
 mod static_files;
 mod stats;
