@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="page-title">Upload Photos</h1>
+
+<section class="panel">
+    <h2>Add Concert Photos</h2>
+    <p class="section-intro">Upload HEIC photos — EXIF metadata is extracted and images are converted to JPEG automatically.</p>
+    <form class="upload-form" action="/upload" method="post" enctype="multipart/form-data">
+        <div class="field">
+            <label for="band">Band</label>
+            <input id="band" name="band" required>
+        </div>
+        <div class="field">
+            <label for="tour">Tour</label>
+            <input id="tour" name="tour" required>
+        </div>
+        <div class="field">
+            <label for="venue">Venue</label>
+            <input id="venue" name="venue" required>
+        </div>
+        <div class="field">
+            <label for="file">Photos</label>
+            <input type="file" multiple id="file" name="file" accept="image/*" required>
+        </div>
+        <button type="submit">Upload</button>
+    </form>
+</section>
+{% endblock content %}

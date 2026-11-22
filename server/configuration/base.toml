@@ -8,13 +8,21 @@ templates_glob = "templates/**/*.html"
 musicbrainz_base_url = "https://musicbrainz.org/ws/2"
 cover_art_base_url = "https://coverartarchive.org"
 
-[basicauth]
+[admin]
 username = "test"
 password = "test"
 
 [database]
 path = "crusty-metallian.db"
 max_connections = 5
+
+[storage]
+backend = "memory"
+fs_root = ""
+r2_bucket = ""
+r2_endpoint = ""
+r2_access_key = ""
+r2_secret_key = ""
 
 [healing]
 enabled = true

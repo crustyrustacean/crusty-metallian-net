@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="page-title">{{ band }}</h1>
+{% if photos %}
+<ul class="gallery-grid">
+    {% for photo in photos %}
+    <li>
+        <div class="photo-thumb">
+            <img src="/api/v1/photos/{{ photo.id }}/image" alt="{{ photo.band }} at {{ photo.venue }}" loading="lazy">
+            <div class="exif-overlay">
+                {% if photo.exif_data.date_time_original %}
+                <p>{{ photo.exif_data.date_time_original }}</p>
+                {% endif %}
+                {% if photo.exif_data.make or photo.exif_data.model %}
+                <p>{{ photo.exif_data.make }} {{ photo.exif_data.model }}</p>
+                {% endif %}
+                {% if photo.exif_data.lens_model %}
+                <p>{{ photo.exif_data.lens_model }}</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="photo-info">
+            <p>{{ photo.band }}</p>
+            <p>{{ photo.tour }}</p>
+            <p>{{ photo.venue }}</p>
+        </div>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No photos in this gallery yet.</p>
+{% endif %}
+
+<p class="gallery-back"><a href="/galleries">&larr; All Galleries</a></p>
+{% endblock content %}

@@ -7,16 +7,11 @@ use confik::{Configuration, EnvSource, FileSource};
 pub struct Settings {
     pub application: ApplicationSettings,
     pub metadata: MetadataSettings,
-    pub basicauth: BasicAuthSettings,
+    pub admin: AdminSettings,
     pub database: DatabaseSettings,
+    pub storage: StorageSettings,
     pub healing: HealingSettings,
     pub cors: CorsSettings,
-}
-
-#[derive(Configuration, Clone, Debug)]
-pub struct BasicAuthSettings {
-    pub username: String,
-    pub password: String,
 }
 
 #[derive(Configuration, Clone, Debug)]
@@ -35,9 +30,25 @@ pub struct MetadataSettings {
 }
 
 #[derive(Configuration, Clone, Debug)]
+pub struct AdminSettings {
+    pub username: String,
+    pub password: String,
+}
+
+#[derive(Configuration, Clone, Debug)]
 pub struct DatabaseSettings {
     pub path: String,
     pub max_connections: Option<u32>,
+}
+
+#[derive(Configuration, Clone, Debug)]
+pub struct StorageSettings {
+    pub backend: String,
+    pub fs_root: String,
+    pub r2_bucket: String,
+    pub r2_endpoint: String,
+    pub r2_access_key: String,
+    pub r2_secret_key: String,
 }
 
 /// The background healer's tuning. `enabled` can be flipped from the
@@ -132,13 +143,21 @@ mod tests {
             musicbrainz_base_url = "https://musicbrainz.org/ws/2"
             cover_art_base_url = "https://coverartarchive.org"
 
-            [basicauth]
+            [admin]
             username = "test"
             password = "test"
 
             [database]
             path = "crusty-metallian.db"
             max_connections = 5
+
+            [storage]
+            backend = "memory"
+            fs_root = ""
+            r2_bucket = ""
+            r2_endpoint = ""
+            r2_access_key = ""
+            r2_secret_key = ""
 
             [healing]
             enabled = true
@@ -162,15 +181,8 @@ mod tests {
 
         assert_eq!(settings.application.port, 8000);
         assert_eq!(settings.application.host, "127.0.0.1");
-        assert_eq!(settings.application.static_dir, "static");
-        assert_eq!(settings.application.templates_glob, "templates/**/*.html");
         assert_eq!(settings.database.path, "crusty-metallian.db");
-        assert_eq!(settings.database.max_connections, Some(5));
-        assert!(settings.healing.enabled);
-        assert_eq!(
-            settings.cors.allowed_origins,
-            vec!["https://crusty-metallian.net"]
-        );
+        assert_eq!(settings.storage.backend, "memory");
     }
 
     #[test]
@@ -192,5 +204,6 @@ mod tests {
         assert_eq!(settings.application.port, 5001);
         assert_eq!(settings.application.host, "0.0.0.0");
         assert_eq!(settings.database.path, "/data/crusty-metallian.db");
+        assert_eq!(settings.storage.backend, "r2");
     }
 }

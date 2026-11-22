@@ -6,6 +6,7 @@ use server::configuration::{DatabaseSettings, Settings, get_configuration};
 use server::database::{DatabaseBackend, SqliteRepository};
 use server::metadata::MetadataClient;
 use server::startup::Application;
+use server::storage::{InMemoryStorageBackend, StorageBackend};
 use server::telemetry::{get_subscriber, init_subscriber};
 use server::template::{TemplateRenderer, tera::TeraRenderer};
 use std::path::{Path, PathBuf};
@@ -57,7 +58,9 @@ impl Drop for TempDir {
 pub struct TestApp {
     pub address: String,
     pub port: u16,
+    /// Authenticated admin client (logged in via POST /login with cookie store).
     pub api_client: reqwest::Client,
+    /// Unauthenticated client (no session cookie).
     pub unauthenticated_client: reqwest::Client,
     pub metadata_stub: MetadataStubs,
     pub database_dir: tempfile::TempDir,
@@ -126,34 +129,48 @@ async fn spawn_app_with(
             .await
             .expect("Failed to initialise test SQLite repository."),
     );
+    let storage: Arc<dyn StorageBackend> = Arc::new(InMemoryStorageBackend::new());
     let metadata = MetadataClient::with_base_urls(
         metadata_stub.musicbrainz.uri(),
         metadata_stub.cover_art.uri(),
     );
 
-    let basicauth = configuration.basicauth.clone();
-    let application = Application::build(configuration, template_renderer, database, metadata)
-        .await
-        .expect("Failed to build application.");
+    let admin = configuration.admin.clone();
+    let application = Application::build(
+        configuration,
+        template_renderer,
+        database,
+        storage,
+        metadata,
+    )
+    .await
+    .expect("Failed to build application.");
     let application_port = application.port();
     drop(tokio::spawn(application.run_until_stopped()));
 
-    use base64::Engine;
-    let encoded = base64::engine::general_purpose::STANDARD
-        .encode(format!("{}:{}", basicauth.username, basicauth.password));
-    let auth_header = format!("Basic {encoded}");
+    let address = format!("http://localhost:{}", application_port);
 
     let api_client = reqwest::Client::builder()
         .redirect(reqwest::redirect::Policy::none())
-        .default_headers(
-            std::iter::once((
-                reqwest::header::AUTHORIZATION,
-                reqwest::header::HeaderValue::from_str(&auth_header).unwrap(),
-            ))
-            .collect(),
-        )
+        .cookie_store(true)
         .build()
         .unwrap();
+
+    // Sign in so `api_client` holds a valid admin session cookie.
+    let login_response = api_client
+        .post(format!("{address}/login"))
+        .form(&[
+            ("username", admin.username.as_str()),
+            ("password", admin.password.as_str()),
+        ])
+        .send()
+        .await
+        .expect("Failed to log in test client.");
+    assert_eq!(
+        login_response.status(),
+        reqwest::StatusCode::SEE_OTHER,
+        "Test client login failed"
+    );
 
     let unauthenticated_client = reqwest::Client::builder()
         .redirect(reqwest::redirect::Policy::none())
@@ -161,7 +178,7 @@ async fn spawn_app_with(
         .unwrap();
 
     TestApp {
-        address: format!("http://localhost:{}", application_port),
+        address,
         port: application_port,
         api_client,
         unauthenticated_client,

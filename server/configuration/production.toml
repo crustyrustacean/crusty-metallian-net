@@ -3,3 +3,6 @@ host = "0.0.0.0"
 
 [database]
 path = "/data/crusty-metallian.db"
+
+[storage]
+backend = "r2"

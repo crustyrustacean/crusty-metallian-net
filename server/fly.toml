@@ -19,7 +19,7 @@ primary_region = 'dfw'
     path = '/api/v1/health_check'
 
 [[vm]]
-  memory = '256mb'
+  memory = '512mb'
   cpu_kind = 'shared'
   cpus = 1
 

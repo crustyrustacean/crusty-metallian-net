@@ -152,18 +152,23 @@ async fn release_without_art_saves_year_without_cover_image() {
 }
 
 #[tokio::test]
-async fn admin_pages_and_post_require_basic_auth_while_public_gets_stay_open() {
+async fn admin_pages_redirect_and_api_writes_return_401_while_public_gets_stay_open() {
     let app = spawn_app().await;
 
-    for path in ["/", "/stats"] {
+    for path in ["/", "/stats", "/gallery", "/upload"] {
         let resp = app
             .unauthenticated_client
             .get(format!("{}{path}", app.address))
             .send()
             .await
             .unwrap();
-        assert_eq!(resp.status(), StatusCode::UNAUTHORIZED, "GET {path}");
-        assert!(resp.headers().contains_key(reqwest::header::WWW_AUTHENTICATE));
+        assert_eq!(resp.status(), StatusCode::SEE_OTHER, "GET {path}");
+        assert_eq!(
+            resp.headers()
+                .get(reqwest::header::LOCATION)
+                .and_then(|v| v.to_str().ok()),
+            Some("/login")
+        );
     }
 
     let post_resp = app
@@ -174,28 +179,17 @@ async fn admin_pages_and_post_require_basic_auth_while_public_gets_stay_open() {
         .await
         .unwrap();
     assert_eq!(post_resp.status(), StatusCode::UNAUTHORIZED);
-    assert!(
-        post_resp
-            .headers()
-            .contains_key(reqwest::header::WWW_AUTHENTICATE)
-    );
 
     // Public endpoints stay open without credentials.
-    let health = app
-        .unauthenticated_client
-        .get(format!("{}/api/v1/health_check", app.address))
-        .send()
-        .await
-        .unwrap();
-    assert_eq!(health.status(), StatusCode::OK);
-
-    let stats = app
-        .unauthenticated_client
-        .get(format!("{}/api/v1/stats", app.address))
-        .send()
-        .await
-        .unwrap();
-    assert_eq!(stats.status(), StatusCode::OK);
+    for path in ["/api/v1/health_check", "/api/v1/stats", "/api/v1/galleries", "/galleries"] {
+        let resp = app
+            .unauthenticated_client
+            .get(format!("{}{path}", app.address))
+            .send()
+            .await
+            .unwrap();
+        assert_eq!(resp.status(), StatusCode::OK, "GET {path}");
+    }
 
     let rotation = app
         .unauthenticated_client
