@@ -9,29 +9,35 @@
 </head>
 <body>
     <header id="header">
-        <p class="site-title"><a href="/galleries">The Crusty Metallian</a></p>
-        <p class="site-subtitle">{{ sub_header }}</p>
+        <p class="site-title"><a href="https://crusty-metallian.net/">The Crusty Metallian</a></p>
         <nav aria-label="Main">
             <ul>
-                <li><a href="https://crusty-metallian.net">Blog</a></li>
+                <li><a href="https://crusty-metallian.net/">Home</a></li>
+                <li><a href="https://crusty-metallian.net/blog/">Blog</a></li>
+                <li><a href="https://crusty-metallian.net/concerts/">Concerts</a></li>
                 <li><a href="/galleries">Galleries</a></li>
-                {% if logged_in | default(value=false) %}
+                <li><a href="https://crusty-metallian.net/stats/">Stats</a></li>
+                <li><a href="https://crusty-metallian.net/about/">About</a></li>
+            </ul>
+        </nav>
+        {% if logged_in | default(value=false) %}
+        <nav class="admin-nav" aria-label="Admin">
+            <ul>
                 <li><a href="/">Admin</a></li>
-                <li><a href="/stats">Stats</a></li>
+                <li><a href="/stats">Rotation</a></li>
                 <li><a href="/gallery">Manage Gallery</a></li>
                 <li><a href="/upload">Upload</a></li>
                 <li><a href="/logout">Logout</a></li>
-                {% else %}
-                <li><a href="/login">Login</a></li>
-                {% endif %}
             </ul>
         </nav>
+        {% endif %}
     </header>
     <main id="main">
         {% block content %}{% endblock content %}
     </main>
     <footer id="footer">
-        <p>&copy; 2026 | Jeffery D. Mitchell | All Rights Reserved | Built with <a href="https://actix.rs">Actix Web</a>, <a href="https://keats.github.io/tera">Tera</a>, and <a href="https://data-star.dev">Datastar</a></p>
+        <p>&copy; 2026 | Jeffery D. Mitchell | All Rights Reserved | Powered by <a href="https://actix.rs">Actix Web</a>, <a href="https://keats.github.io/tera">Tera</a>, and <a href="https://data-star.dev">Datastar</a></p>
+        <p class="feed-link"><a href="https://crusty-metallian.net/feed.xml">RSS feed</a> | <a href="https://crusty-metallian.net/privacy/">Privacy Policy</a> | {% if logged_in | default(value=false) %}<a href="/logout">Logout</a>{% else %}<a href="/">Admin</a>{% endif %}</p>
     </footer>
     <script type="module" src="/static/datastar.js?v=5"></script>
 </body>
