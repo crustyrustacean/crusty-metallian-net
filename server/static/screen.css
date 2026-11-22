@@ -263,6 +263,21 @@
                 }
             }
         }
+
+        & .admin-nav {
+            margin-block-start: var(--space-md);
+            padding-block-start: var(--space-sm);
+            border-block-start: 1px solid var(--border);
+
+            & a {
+                font-size: 0.8rem;
+                color: var(--accent);
+
+                &:hover {
+                    color: var(--text-primary);
+                }
+            }
+        }
     }
 
     /* Main Content */
