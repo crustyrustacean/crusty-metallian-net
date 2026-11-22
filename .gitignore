@@ -1,15 +1,10 @@
 # crusty-metallian-net gitignore configuration
 
-# Rho coding agent configuration
-.rho
-logs
-
 # IDE configuration
+.vscode
 .zed
 
 # build assets
-dist/
-logs/
+dist
+server/target
 
-# Lighthouse reports (local audits)
-.lighthouse/

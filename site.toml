@@ -1,9 +1,6 @@
 [site]
 name = "The Crusty Metallian"
 base_url = "https://crusty-metallian.net"
-# Both feed the <meta name="description"> fallback, the Open Graph
-# description and the RSS channel description. Unset, the feed shipped an
-# empty <description> and every share card had no summary.
 description = "A heavy metal oriented music blog: reviews, concert memories and photos."
 author = "Jeffery D. Mitchell"
 
@@ -14,8 +11,6 @@ static_dir = "static"
 styles_dir = "styles"
 templates_dir = "templates"
 
-# This site uses neither the WASM island client nor the client-side
-# search index, so skip writing them to dist/.
 islands = false
 search = false
 
@@ -23,8 +18,6 @@ search = false
 enabled = true
 
 [images]
-# Responsive variants for post hero images. Keep the widest breakpoint at or
-# below the widest source you publish, so nothing is ever upscaled.
 widths = [480, 640, 800, 1200, 1600]
 format = "webp"
 quality = 78
