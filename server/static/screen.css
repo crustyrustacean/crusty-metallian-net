@@ -713,8 +713,21 @@
             margin-block-end: var(--space-md);
         }
 
+        & .error-heading {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-primary);
+            margin-block-end: var(--space-sm);
+        }
+
         & p {
             color: var(--text-muted);
+        }
+
+        & .error-actions {
+            margin-block-start: var(--space-lg);
         }
     }
 

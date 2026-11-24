@@ -3,6 +3,14 @@
 {% block content %}
 <div class="error-page">
     <h3>{{ status_code }}</h3>
+    {% if heading | default(value=false) %}
+    <p class="error-heading">{{ heading }}</p>
+    {% endif %}
     <p>{{ message }}</p>
+    {% if back_url | default(value=false) %}
+    <p class="error-actions">
+        <a class="button" href="{{ back_url }}">{{ back_label | default(value="Go Back") }}</a>
+    </p>
+    {% endif %}
 </div>
 {% endblock content %}
