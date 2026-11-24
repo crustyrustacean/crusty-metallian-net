@@ -426,6 +426,7 @@
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
         gap: var(--space-lg);
+        align-items: start;
 
         & > li {
             background: var(--bg-card);
@@ -441,8 +442,7 @@
 
         & img {
             inline-size: 100%;
-            aspect-ratio: 4 / 3;
-            object-fit: cover;
+            block-size: auto;
         }
 
         & [id^="caption-"] {
@@ -468,6 +468,110 @@
 
     .photo-thumb {
         position: relative;
+    }
+
+    .photo-thumb-button {
+        display: block;
+        inline-size: 100%;
+        padding: 0;
+        border: 0;
+        background: none;
+        cursor: zoom-in;
+
+        &:hover {
+            background: none;
+        }
+    }
+
+    /* Lightbox */
+    .lightbox {
+        position: fixed;
+        inset: 0;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: var(--space-lg);
+        background: oklch(5% 0 0 / 0.92);
+        backdrop-filter: blur(4px);
+    }
+
+    .lightbox-content {
+        max-inline-size: min(92vw, 72rem);
+        max-block-size: 92dvh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: var(--space-sm);
+    }
+
+    .lightbox-image {
+        max-inline-size: 100%;
+        max-block-size: calc(92dvh - 5.5rem);
+        inline-size: auto;
+        block-size: auto;
+        object-fit: contain;
+        border-radius: 4px;
+        box-shadow: 0 12px 40px oklch(0% 0 0 / 0.6);
+    }
+
+    .lightbox-caption {
+        text-align: center;
+    }
+
+    .lightbox-title {
+        font-family: var(--font-heading);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        font-size: 1rem;
+        color: var(--text-primary);
+    }
+
+    .lightbox-exif {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        margin-block-start: var(--space-xs);
+    }
+
+    .lightbox-close,
+    .lightbox-nav {
+        position: fixed;
+        z-index: 1001;
+        display: grid;
+        place-items: center;
+        padding: 0;
+        inline-size: 2.75rem;
+        block-size: 2.75rem;
+        font-size: 1.75rem;
+        line-height: 1;
+        background: oklch(15% 0 0 / 0.85);
+        border: 1px solid var(--border);
+        color: var(--text-primary);
+
+        &:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: var(--bg-dark);
+        }
+    }
+
+    .lightbox-close {
+        inset-block-start: var(--space-md);
+        inset-inline-end: var(--space-md);
+    }
+
+    .lightbox-nav {
+        inset-block-start: 50%;
+        transform: translateY(-50%);
+        font-size: 2rem;
+    }
+
+    .lightbox-prev {
+        inset-inline-start: var(--space-md);
+    }
+
+    .lightbox-next {
+        inset-inline-end: var(--space-md);
     }
 
     .exif-overlay {

@@ -2,31 +2,76 @@
 {% block content %}
 <h1 class="page-title">{{ band }}</h1>
 {% if photos %}
-<ul class="gallery-grid">
-    {% for photo in photos %}
-    <li>
-        <div class="photo-thumb">
-            <img src="/api/v1/photos/{{ photo.id }}/image" alt="{{ photo.band }} at {{ photo.venue }}" loading="lazy">
-            <div class="exif-overlay">
-                {% if photo.exif_data.date_time_original %}
-                <p>{{ photo.exif_data.date_time_original }}</p>
-                {% endif %}
-                {% if photo.exif_data.make or photo.exif_data.model %}
-                <p>{{ photo.exif_data.make }} {{ photo.exif_data.model }}</p>
-                {% endif %}
-                {% if photo.exif_data.lens_model %}
-                <p>{{ photo.exif_data.lens_model }}</p>
-                {% endif %}
+<div data-signals="{_lightbox: {open: false, index: 0, src: '', alt: '', caption: '', exif: ''}}"
+     data-on:keydown__window="$_lightbox.open && (evt.key === 'Escape' ? ($_lightbox.open = false) : evt.key === 'ArrowRight' ? ($_lightbox.index = ($_lightbox.index + 1) % {{ photos | length }}) : evt.key === 'ArrowLeft' ? ($_lightbox.index = ($_lightbox.index - 1 + {{ photos | length }}) % {{ photos | length }}) : null)"
+     data-effect="if ($_lightbox.open) { const btn = document.querySelectorAll('.photo-thumb-button')[$_lightbox.index]; if (btn) { $_lightbox.src = btn.dataset.photoSrc; $_lightbox.alt = btn.dataset.photoAlt; $_lightbox.caption = btn.dataset.photoCaption; $_lightbox.exif = btn.dataset.photoExif; } } document.body.style.overflow = $_lightbox.open ? 'hidden' : ''">
+    <ul class="gallery-grid">
+        {% for photo in photos %}
+        <li>
+            <div class="photo-thumb">
+                <button type="button"
+                        class="photo-thumb-button"
+                        aria-label="View larger photo of {{ photo.band }} at {{ photo.venue }}"
+                        data-photo-src="/api/v1/photos/{{ photo.id }}/image"
+                        data-photo-alt="{{ photo.band }} at {{ photo.venue }}"
+                        data-photo-caption="{{ photo.band }} — {{ photo.tour }} — {{ photo.venue }}"
+                        data-photo-exif="{% if photo.exif_data.date_time_original %}{{ photo.exif_data.date_time_original }}{% endif %}{% if photo.exif_data.make or photo.exif_data.model %}{% if photo.exif_data.date_time_original %} · {% endif %}{{ photo.exif_data.make | default(value='') }} {{ photo.exif_data.model | default(value='') }}{% endif %}{% if photo.exif_data.lens_model %}{% if photo.exif_data.date_time_original or photo.exif_data.make or photo.exif_data.model %} · {% endif %}{{ photo.exif_data.lens_model }}{% endif %}"
+                        data-on:click="$_lightbox.index = {{ loop.index0 }}; $_lightbox.open = true">
+                    <img src="/api/v1/photos/{{ photo.id }}/image" alt="{{ photo.band }} at {{ photo.venue }}" loading="lazy">
+                </button>
+                <div class="exif-overlay">
+                    {% if photo.exif_data.date_time_original %}
+                    <p>{{ photo.exif_data.date_time_original }}</p>
+                    {% endif %}
+                    {% if photo.exif_data.make or photo.exif_data.model %}
+                    <p>{{ photo.exif_data.make }} {{ photo.exif_data.model }}</p>
+                    {% endif %}
+                    {% if photo.exif_data.lens_model %}
+                    <p>{{ photo.exif_data.lens_model }}</p>
+                    {% endif %}
+                </div>
             </div>
-        </div>
-        <div class="photo-info">
-            <p>{{ photo.band }}</p>
-            <p>{{ photo.tour }}</p>
-            <p>{{ photo.venue }}</p>
-        </div>
-    </li>
-    {% endfor %}
-</ul>
+            <div class="photo-info">
+                <p>{{ photo.band }}</p>
+                <p>{{ photo.tour }}</p>
+                <p>{{ photo.venue }}</p>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <div class="lightbox"
+         role="dialog"
+         aria-modal="true"
+         aria-label="Photo viewer"
+         style="display: none"
+         data-show="$_lightbox.open"
+         data-on:click="evt.target === el && ($_lightbox.open = false)">
+        <button type="button"
+                class="lightbox-close"
+                aria-label="Close lightbox"
+                data-on:click="$_lightbox.open = false">&times;</button>
+        {% if photos | length > 1 %}
+        <button type="button"
+                class="lightbox-nav lightbox-prev"
+                aria-label="Previous photo"
+                data-on:click="$_lightbox.index = ($_lightbox.index - 1 + {{ photos | length }}) % {{ photos | length }}">&lsaquo;</button>
+        <button type="button"
+                class="lightbox-nav lightbox-next"
+                aria-label="Next photo"
+                data-on:click="$_lightbox.index = ($_lightbox.index + 1) % {{ photos | length }}">&rsaquo;</button>
+        {% endif %}
+        <figure class="lightbox-content">
+            <img class="lightbox-image"
+                 data-attr:src="$_lightbox.open ? $_lightbox.src : null"
+                 data-attr:alt="$_lightbox.alt">
+            <figcaption class="lightbox-caption">
+                <p class="lightbox-title" data-text="$_lightbox.caption"></p>
+                <p class="lightbox-exif" data-show="$_lightbox.exif !== ''" data-text="$_lightbox.exif"></p>
+            </figcaption>
+        </figure>
+    </div>
+</div>
 {% else %}
 <p>No photos in this gallery yet.</p>
 {% endif %}

@@ -117,6 +117,8 @@ async fn photo_upload_public_gallery_inline_edit_and_delete_round_trip() {
     assert!(band_html.contains("Future Past Tour"));
     assert!(band_html.contains("Rogers Arena"));
     assert!(band_html.contains(&format!("/api/v1/photos/{photo_id}/image")));
+    assert!(band_html.contains("photo-thumb-button"));
+    assert!(band_html.contains("class=\"lightbox\""));
 
     // 3. Inline edit via Datastar SSE.
     let edit_form = app
