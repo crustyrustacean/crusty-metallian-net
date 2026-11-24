@@ -17,8 +17,9 @@ async fn main() -> anyhow::Result<()> {
     init_subscriber(subscriber);
 
     let configuration = get_configuration()?;
-    let template_renderer: Arc<dyn TemplateRenderer> =
-        Arc::new(TeraRenderer::new(&configuration.application.templates_glob)?);
+    let template_renderer: Arc<dyn TemplateRenderer> = Arc::new(TeraRenderer::new(
+        &configuration.application.templates_glob,
+    )?);
     let database: Arc<dyn DatabaseBackend> =
         Arc::new(SqliteRepository::new(&configuration.database).await?);
     let storage: Arc<dyn StorageBackend> = match configuration.storage.backend.as_str() {

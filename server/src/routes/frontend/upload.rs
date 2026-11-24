@@ -122,10 +122,7 @@ pub async fn post_upload(
                 return render_upload_error(
                     templates.as_ref(),
                     StatusCode::BAD_REQUEST,
-                    format_upload_error(
-                        file_name.as_deref(),
-                        "Could not read the uploaded file.",
-                    ),
+                    format_upload_error(file_name.as_deref(), "Could not read the uploaded file."),
                 );
             }
             Err(err) => {
