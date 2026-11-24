@@ -162,3 +162,99 @@ async fn photo_upload_public_gallery_inline_edit_and_delete_round_trip() {
         .unwrap();
     assert_eq!(missing.status(), StatusCode::NOT_FOUND);
 }
+
+#[tokio::test]
+async fn jpeg_photo_upload_succeeds_and_invalid_image_returns_400() {
+    let app = spawn_app().await;
+
+    let jpeg_bytes = server::conversion::convert_heic_to_jpeg(heic_fixture()).unwrap();
+
+    // 1. Upload a valid JPEG.
+    let form = Form::new()
+        .text("band", "Judas Priest")
+        .text("tour", "Invincible Shield Tour")
+        .text("venue", "Pacific Coliseum")
+        .part(
+            "file",
+            Part::bytes(jpeg_bytes.clone()).file_name("show.jpg"),
+        );
+
+    let create = app
+        .api_client
+        .post(format!("{}/api/v1/photos", app.address))
+        .multipart(form)
+        .send()
+        .await
+        .unwrap();
+    assert_eq!(create.status(), StatusCode::OK);
+    let photo_id: Uuid = create.json().await.unwrap();
+
+    let img = app
+        .unauthenticated_client
+        .get(format!("{}/api/v1/photos/{photo_id}/image", app.address))
+        .send()
+        .await
+        .unwrap();
+    assert_eq!(img.status(), StatusCode::OK);
+    assert_eq!(img.bytes().await.unwrap().as_ref(), jpeg_bytes.as_slice());
+
+    // 2. Upload invalid bytes -> 400 Bad Request.
+    let bad_form = Form::new()
+        .text("band", "Judas Priest")
+        .text("tour", "Invincible Shield Tour")
+        .text("venue", "Pacific Coliseum")
+        .part(
+            "file",
+            Part::bytes(b"not a real image".to_vec()).file_name("broken.jpg"),
+        );
+
+    let bad = app
+        .api_client
+        .post(format!("{}/api/v1/photos", app.address))
+        .multipart(bad_form)
+        .send()
+        .await
+        .unwrap();
+    assert_eq!(bad.status(), StatusCode::BAD_REQUEST);
+}
+
+#[tokio::test]
+async fn browser_upload_error_renders_styled_error_page() {
+    let app = spawn_app().await;
+
+    let bad_form = Form::new()
+        .text("band", "Judas Priest")
+        .text("tour", "Invincible Shield Tour")
+        .text("venue", "Pacific Coliseum")
+        .part(
+            "file",
+            Part::bytes(b"definitely not an image".to_vec()).file_name("notes.txt"),
+        );
+
+    let response = app
+        .api_client
+        .post(format!("{}/upload", app.address))
+        .multipart(bad_form)
+        .send()
+        .await
+        .unwrap();
+
+    assert_eq!(response.status(), StatusCode::BAD_REQUEST);
+    let content_type = response
+        .headers()
+        .get(reqwest::header::CONTENT_TYPE)
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("");
+    assert!(
+        content_type.starts_with("text/html"),
+        "Expected text/html, got {content_type}"
+    );
+
+    let body = response.text().await.unwrap();
+    assert!(body.contains("<!DOCTYPE html>"));
+    assert!(body.contains("error-page"));
+    assert!(body.contains("400"));
+    assert!(body.contains("Upload Failed"));
+    assert!(body.contains("notes.txt"));
+    assert!(body.contains(r#"href="/upload""#));
+}

@@ -32,9 +32,8 @@ pub fn convert_to_jpg(image: RgbaImage) -> Result<Vec<u8>, anyhow::Error> {
 
 /// Convert HEIC bytes to JPEG bytes.
 ///
-/// This is the single entry point the upload handler calls. It chains the
-/// decode → pixel buffer → encode pipeline, propagating errors instead of
-/// panicking. A corrupted or non-HEIC input yields `Err`, not a crash.
+/// Chains the decode → pixel buffer → encode pipeline, propagating errors
+/// instead of panicking. A corrupted or non-HEIC input yields `Err`, not a crash.
 pub fn convert_heic_to_jpeg(heic_bytes: &[u8]) -> Result<Vec<u8>, anyhow::Error> {
     let decoded = heic_decode(heic_bytes)?;
 
@@ -42,6 +41,25 @@ pub fn convert_heic_to_jpeg(heic_bytes: &[u8]) -> Result<Vec<u8>, anyhow::Error>
         .ok_or_else(|| anyhow!("Pixel buffer did not match image dimensions"))?;
 
     convert_to_jpg(image_buffer)
+}
+
+/// Normalize an uploaded photo (HEIC or JPEG) to JPEG bytes.
+///
+/// Valid JPEGs are verified by decoding and returned as-is to avoid lossy
+/// re-encoding and preserve EXIF orientation. HEIC inputs are decoded and
+/// encoded to JPEG. Unsupported or corrupted inputs return `Err`.
+pub fn normalize_to_jpeg(image_bytes: &[u8]) -> Result<Vec<u8>, anyhow::Error> {
+    if matches!(
+        image::guess_format(image_bytes),
+        Ok(image::ImageFormat::Jpeg)
+    ) {
+        image::load_from_memory_with_format(image_bytes, image::ImageFormat::Jpeg)
+            .context("Failed to decode the JPEG image")?;
+        return Ok(image_bytes.to_vec());
+    }
+
+    convert_heic_to_jpeg(image_bytes)
+        .context("Unsupported or invalid image (expected HEIC or JPEG)")
 }
 
 #[cfg(test)]
@@ -128,6 +146,43 @@ mod tests {
         let result = convert_heic_to_jpeg(garbage_bytes);
 
         // Assert — the pipeline returns an error instead of panicking
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn normalize_to_jpeg_passes_through_valid_jpeg_unchanged() {
+        let img: RgbaImage = ImageBuffer::from_raw(2, 2, vec![128u8; 16]).unwrap();
+        let original_jpeg = convert_to_jpg(img).unwrap();
+
+        let output = normalize_to_jpeg(&original_jpeg).unwrap();
+
+        assert_eq!(output, original_jpeg);
+    }
+
+    #[test]
+    fn normalize_to_jpeg_converts_heic_fixture() {
+        let heic_bytes = include_bytes!("../tests/fixtures/IMG_2215.HEIC");
+
+        let jpeg_bytes = normalize_to_jpeg(heic_bytes).unwrap();
+
+        assert!(!jpeg_bytes.is_empty());
+        assert_eq!(jpeg_bytes[0], 0xFF);
+        assert_eq!(jpeg_bytes[1], 0xD8);
+    }
+
+    #[test]
+    fn normalize_to_jpeg_rejects_corrupted_jpeg() {
+        let truncated_jpeg = &[0xFF, 0xD8, 0xFF, 0xE0, 0x00, 0x10, 0x00];
+
+        let result = normalize_to_jpeg(truncated_jpeg);
+
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn normalize_to_jpeg_rejects_garbage_bytes() {
+        let result = normalize_to_jpeg(b"definitely not an image");
+
         assert!(result.is_err());
     }
 }

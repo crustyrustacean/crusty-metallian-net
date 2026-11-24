@@ -1,6 +1,6 @@
 // Shared, recoverable photo operations for both browser and API routes.
 
-use crate::conversion::convert_heic_to_jpeg;
+use crate::conversion::normalize_to_jpeg;
 use crate::database::{DatabaseBackend, DatabaseError, PhotoStatus};
 use crate::domain::{Exif, Photo};
 use crate::exif::{get_raw_exif, parse_exif};
@@ -53,7 +53,7 @@ impl PhotoOperations {
                 Ok(raw) => parse_exif(&raw),
                 Err(_) => Exif::default(),
             };
-            convert_heic_to_jpeg(&photo_bytes).map(|jpeg| (exif_data, Bytes::from(jpeg)))
+            normalize_to_jpeg(&photo_bytes).map(|jpeg| (exif_data, Bytes::from(jpeg)))
         })
         .await
         .map_err(e500)?
