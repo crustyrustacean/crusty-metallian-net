@@ -42,7 +42,9 @@ pub async fn edit_photo(
     let context = caption_context(id, &photo.band, &photo.tour, &photo.venue);
     let html = templates.render("partials/edit_form.html", &context)?;
 
-    Ok(datastar_sse([PatchElements::new(html).into_datastar_event()]))
+    Ok(datastar_sse([
+        PatchElements::new(html).into_datastar_event()
+    ]))
 }
 
 /// PUT /gallery/{id}
@@ -67,7 +69,9 @@ pub async fn update_photo(
     });
     let html = templates.render("partials/caption.html", &context)?;
 
-    Ok(datastar_sse([PatchElements::new(html).into_datastar_event()]))
+    Ok(datastar_sse([
+        PatchElements::new(html).into_datastar_event()
+    ]))
 }
 
 /// GET /gallery/{id}/cancel
@@ -89,5 +93,7 @@ pub async fn cancel_edit(
     });
     let html = templates.render("partials/caption.html", &context)?;
 
-    Ok(datastar_sse([PatchElements::new(html).into_datastar_event()]))
+    Ok(datastar_sse([
+        PatchElements::new(html).into_datastar_event()
+    ]))
 }

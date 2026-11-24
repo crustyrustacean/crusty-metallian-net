@@ -181,7 +181,12 @@ async fn admin_pages_redirect_and_api_writes_return_401_while_public_gets_stay_o
     assert_eq!(post_resp.status(), StatusCode::UNAUTHORIZED);
 
     // Public endpoints stay open without credentials.
-    for path in ["/api/v1/health_check", "/api/v1/stats", "/api/v1/galleries", "/galleries"] {
+    for path in [
+        "/api/v1/health_check",
+        "/api/v1/stats",
+        "/api/v1/galleries",
+        "/galleries",
+    ] {
         let resp = app
             .unauthenticated_client
             .get(format!("{}{path}", app.address))

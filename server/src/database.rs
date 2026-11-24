@@ -100,11 +100,8 @@ pub trait DatabaseBackend: Send + Sync {
     ) -> Result<bool, DatabaseError>;
     async fn read_photo(&self, id: Uuid) -> Result<Photo, DatabaseError>;
     async fn list_photos(&self) -> Result<Vec<Photo>, DatabaseError>;
-    async fn update_photo(
-        &self,
-        id: Uuid,
-        updated_photo: UpdatePhoto,
-    ) -> Result<(), DatabaseError>;
+    async fn update_photo(&self, id: Uuid, updated_photo: UpdatePhoto)
+    -> Result<(), DatabaseError>;
     async fn delete_photo(&self, id: Uuid) -> Result<(), DatabaseError>;
     async fn list_galleries(&self) -> Result<Vec<Gallery>, DatabaseError>;
     async fn list_photos_by_band(&self, band: &str) -> Result<Vec<Photo>, DatabaseError>;

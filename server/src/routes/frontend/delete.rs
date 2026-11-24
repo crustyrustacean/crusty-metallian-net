@@ -28,7 +28,8 @@ pub async fn delete_photo(
         .delete_photo(id, database.as_ref().as_ref(), storage.as_ref().as_ref())
         .await?;
 
-    Ok(datastar_sse([
-        PatchElements::new_remove(format!("#photo-{id}")).into_datastar_event(),
-    ]))
+    Ok(datastar_sse([PatchElements::new_remove(format!(
+        "#photo-{id}"
+    ))
+    .into_datastar_event()]))
 }
