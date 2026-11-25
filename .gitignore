@@ -11,3 +11,8 @@ server/target
 *.db-shm
 *.db-wal
 
+# Environment files
+.env
+.env.*
+!.env.example
+
